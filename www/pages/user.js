@@ -93,10 +93,11 @@ function User({ url, user }) {
 
 User.getInitialProps = async ({ req, query }) => {
   const url = req
-    ? `https://${req.headers.host}/api/py/user?name=${query.name}`
-    : `${window.location.origin}/api/py/user?name=${query.name}`;
+    ? `https://${req.headers.host}/api/py?name=${query.name}`
+    : `${window.location.origin}/api/py?name=${query.name}`;
   const user = await fetch(url);
-  return { user };
+  const json = await user.json();
+  return { user: json };
 };
 
 export default User;
