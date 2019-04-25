@@ -30,6 +30,7 @@ function sortDescending(list) {
 }
 
 function User({ url, user }) {
+  console.log(user);
   const days = 30;
   const [{ list, sort }, dispatch] = useReducer(reducer, {
     sort: 'descending',
@@ -45,7 +46,7 @@ function User({ url, user }) {
   return (
     <>
       <Head />
-      <h1>Who {url.query.name} follows</h1>
+      <h1 className="heading">Who {url.query.name} follows</h1>
       <table className="users-table">
         <thead className="users-table__header">
           <tr>
@@ -91,10 +92,9 @@ function User({ url, user }) {
 }
 
 User.getInitialProps = async ({ req, query }) => {
-  return {};
   const url = req
-    ? `https://${req.headers.host}/api/py/user.py?name=${query.name}`
-    : `${window.location.origin}/api/py/user.py?name=${query.name}`;
+    ? `https://${req.headers.host}/api/py/user?name=${query.name}`
+    : `${window.location.origin}/api/py/user?name=${query.name}`;
   const user = await fetch(url);
   return { user };
 };
