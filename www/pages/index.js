@@ -12,7 +12,8 @@ function Home({ router }) {
   return (
     <div id="home">
       <Head />
-
+      <h1>all the great tweets</h1>
+      <h2>🦉</h2>
       <form onSubmit={handleSubmit}>
         <input type="text" name="username" placeholder="twitter user" />
         <button type="submit">Submit</button>
