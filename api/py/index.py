@@ -38,16 +38,20 @@ class Handler(BaseHTTPRequestHandler):
             if 'name' not in params:
                 output_str = 'Expected "name" query param. params: ' + str(params) + '. path: ' + query_string
             else:
-                username = params['name']
-                # self.wfile.write('queried: ' + username)
-                output = self.get_followed_tweets(self.get_followed_usernames(username))
-                json_obj = {}
-                following_list = []
-                for username in output:
-                    user_data = {'username': username, 'tweets': output[username]}
-                    following_list.append(user_data)
-                json_obj['following'] = following_list
-                output_str = json.dumps(json_obj, indent=2)
+                names = params['name']
+                if len(names) == 0:
+                    output_str = 'no name provided'
+                else:
+                    username = params['name'][0]
+                    # self.wfile.write('queried: ' + username)
+                    output = self.get_followed_tweets(self.get_followed_usernames(username))
+                    json_obj = {}
+                    following_list = []
+                    for username in output:
+                        user_data = {'username': username, 'tweets': output[username]}
+                        following_list.append(user_data)
+                    json_obj['following'] = following_list
+                    output_str = json.dumps(json_obj, indent=2)
         self.wfile.write(output_str.encode())
         return
 
