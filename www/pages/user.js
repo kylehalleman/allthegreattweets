@@ -2,6 +2,7 @@ import React, { useReducer } from "react";
 import fetch from "isomorphic-unfetch";
 import json from "../static/following.json";
 import "./users.styl";
+import Head from "../components/head.js";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -42,24 +43,34 @@ function User({ url, user }) {
 
   return (
     <>
+      <Head />
       <h1>Who {url.query.name} follows</h1>
       <table className="users-table">
-        <thead>
+        <thead className="users-table__header">
           <tr>
-            <th>Username</th>
-            <th aria-sort={sort}>
-              <button onClick={sortColumn}>
+            <th className="users-table__column users-table__column--user">
+              Username
+            </th>
+            <th
+              className="users-table__column users-table__column--count"
+              aria-sort={sort}
+            >
+              <button className="users-table__sort" onClick={sortColumn}>
                 Tweet Count <span className="sr-only">click to sort</span>
               </button>
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="users-table__body">
           {list.map(({ username, tweets }) => {
             return (
-              <tr key={username}>
-                <td>{username}</td>
-                <td>{tweets}</td>
+              <tr key={username} className="users-table__row">
+                <td className="users-table__cell users-table__cell--user">
+                  {username}
+                </td>
+                <td className="users-table__cell users-table__cell--count">
+                  {tweets}
+                </td>
               </tr>
             );
           })}
