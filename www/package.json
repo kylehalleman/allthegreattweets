@@ -6,7 +6,6 @@
     "start": "next start"
   },
   "license": "MIT",
-  "repository": "github:kylehalleman/allthegreattweets",
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
