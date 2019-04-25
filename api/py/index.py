@@ -29,11 +29,12 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
         output_str = ''
-        query_string = self.path
-        if len(query_string) < 2:
-            output_str = 'No query param supplied.'
+        query_string = self.path  # /api/py?name=kylehalleman
+        path_prefix = '/api/py?'
+        if not query_string.startswith(path_prefix):
+            output_str = 'Expected path to start with "' + path_prefix + '". Actual: "' + query_string + '"'
         else:
-            params = parse_qs(query_string[2:])
+            params = parse_qs(query_string[len(path_prefix):])
             if 'name' not in params:
                 output_str = 'Expected "name" query param. params: ' + str(params) + '. path: ' + query_string
             else:
