@@ -1,9 +1,14 @@
 {
-  "name": "create-next-example-app",
+  "name": "allthegreattweets",
   "scripts": {
     "dev": "next",
     "build": "next build",
     "start": "next start"
   },
-  "dependencies": {}
+  "license": "MIT",
+  "repository": "github:kylehalleman/allthegreattweets",
+  "dependencies": {},
+  "devDependencies": {
+    "next": "^8.1.0"
+  }
 }
