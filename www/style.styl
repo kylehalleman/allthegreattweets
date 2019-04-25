@@ -1,12 +1,33 @@
-html
-	font-family sans-serif
+systemFont = -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
 
-form
-	width 440px
-	max-width 100%
-	margin 20% auto auto
-	input, button
-		font-size 30px
-		max-width 90%
+html
+	font-family systemFont
+	background: rgb(255,255,255);
+	background: linear-gradient(331deg, rgba(255,255,255,1) 0%, rgba(76,76,204,1) 47%, rgba(0,212,255,1) 100%);
+	background-attachment fixed
+	height 100%
+
+div#home
+	h1, h2
+		text-align center
+		font-weight normal
+		font-size 5em
+	form
+		width 800px
+		max-width 100%
+		margin 5% auto auto
+		input, button
+			font-size 30px
+			max-width 90%
+			font-family systemFont
+		button
+			background-color rgba(46,46,46,1)
+			color white
+			border none
+			padding 3px 10px
+			&:hover, &:focus
+				background-color rgba(46,46,46,.7)
+		input
+			width 680px
 
 

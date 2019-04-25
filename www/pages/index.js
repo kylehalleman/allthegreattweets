@@ -1,6 +1,7 @@
 import React from "react";
 import { withRouter } from "next/router";
 import "../style.styl";
+import Head from "../components/head";
 
 function Home({ router }) {
   function handleSubmit(e) {
@@ -9,9 +10,12 @@ function Home({ router }) {
   }
 
   return (
-    <div>
+    <div id="home">
+      <Head />
+      <h1>all the great tweets</h1>
+      <h2>🦉</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="username" />
+        <input type="text" name="username" placeholder="twitter user" />
         <button type="submit">Submit</button>
       </form>
     </div>
