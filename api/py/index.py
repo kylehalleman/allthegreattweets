@@ -38,7 +38,7 @@ class Handler(BaseHTTPRequestHandler):
                 output_str = 'Expected "name" query param.'
             else:
                 username = params['name']
-                self.wfile.write('queried: ' + username)
+                # self.wfile.write('queried: ' + username)
                 output = self.get_followed_tweets(self.get_followed_usernames(username))
                 json_obj = {}
                 following_list = []
@@ -85,8 +85,8 @@ class Handler(BaseHTTPRequestHandler):
                 date_obj = datetime.datetime.strptime(timestamp, date_format)
                 time_delta = current_time-date_obj
                 numdays = time_delta.days
-                if numdays < 7 :
-                    user_tweets+=1
-            user_tweet_map[username]=user_tweets
-    # return map of username to count within timeframe
+                if numdays < 7:
+                    user_tweets += 1
+            user_tweet_map[username] = user_tweets
+        # return map of username to count within timeframe
         return user_tweet_map
