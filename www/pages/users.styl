@@ -1,23 +1,69 @@
+.sr-only {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+.heading {
+  text-align: center;
+}
+
 .users-table {
-  border: 1px solid;
   width: 100%;
+  border-collapse: collapse;
 }
 
 .users-table__header {
-  }
+  border-bottom: 2px solid;
+}
 
-.users-table__column {
-  }
+.users-table__cell {
+  padding: 0.25em;
+}
 
-  .users-table__column--count,
-  .users-table__cell--count {
-    text-align: right;}
+.users-table__cell--column {
+
+}
+
+.users-table__cell--numeric {
+
+}
+
+.users-table__cell--user {
+  text-align: left;
+}
+
+.users-table__cell--numeric {
+  text-align: right;
+}
 
 .users-table__sort {
-  }
+  font-size: 1em;
+  font-weight: 700;
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+}
 
 .users-table__body {}
 
-  .users-table__row {}
+.users-table__row {}
 
-    .users-table__cell {}
+.users-table__cell {}
+
+.tweets-cell {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.tweets-daily {
+  flex: 1 0 auto;
+  width: 4em;
+}
+
+.tweets-total {
+  flex: 0 0 auto;
+  width: 6em;
+}

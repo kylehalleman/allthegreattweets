@@ -1,19 +1,19 @@
-import React, { useReducer } from "react";
-import fetch from "isomorphic-unfetch";
-import json from "../static/following.json";
-import "./users.styl";
-import Head from "../components/head.js";
+import React, { useReducer } from 'react';
+import fetch from 'isomorphic-unfetch';
+import json from '../static/following.json';
+import './users.styl';
+import Head from '../components/head.js';
 
 function reducer(state, action) {
   switch (action.type) {
-    case "ascending":
+    case 'ascending':
       return {
-        sort: "ascending",
+        sort: 'ascending',
         list: sortAscending(state.list)
       };
-    case "descending":
+    case 'descending':
       return {
-        sort: "descending",
+        sort: 'descending',
         list: sortDescending(state.list)
       };
     default:
@@ -22,22 +22,23 @@ function reducer(state, action) {
 }
 
 function sortAscending(list) {
-  return list.slice(0).sort((a, b) => b.tweets - a.tweets);
-}
-
-function sortDescending(list) {
   return list.slice(0).sort((a, b) => a.tweets - b.tweets);
 }
 
+function sortDescending(list) {
+  return list.slice(0).sort((a, b) => b.tweets - a.tweets);
+}
+
 function User({ url, user }) {
+  const days = 30;
   const [{ list, sort }, dispatch] = useReducer(reducer, {
-    sort: "descending",
-    list: sortAscending(json.following)
+    sort: 'descending',
+    list: sortDescending(json.following)
   });
 
   function sortColumn() {
     dispatch({
-      type: sort === "descending" ? "ascending" : "descending"
+      type: sort === 'descending' ? 'ascending' : 'descending'
     });
   }
 
@@ -48,16 +49,22 @@ function User({ url, user }) {
       <table className="users-table">
         <thead className="users-table__header">
           <tr>
-            <th className="users-table__column users-table__column--user">
+            <th className="users-table__cell users-table__cell--column users-table__cell--user">
               Username
             </th>
             <th
-              className="users-table__column users-table__column--count"
+              className="users-table__cell users-table__cell--column users-table__cell--numeric"
               aria-sort={sort}
             >
               <button className="users-table__sort" onClick={sortColumn}>
-                Tweet Count <span className="sr-only">click to sort</span>
+                <span aria-hidden="true">
+                  {sort === 'descending' ? '👇' : '👆'}
+                </span>
+                Tweets Per Day <span className="sr-only">click to sort</span>
               </button>
+            </th>
+            <th className="users-table__cell users-table__cell--column users-table__cell--numeric users-table__cell--user">
+              (total)
             </th>
           </tr>
         </thead>
@@ -68,8 +75,11 @@ function User({ url, user }) {
                 <td className="users-table__cell users-table__cell--user">
                   {username}
                 </td>
-                <td className="users-table__cell users-table__cell--count">
-                  {tweets}
+                <td className="users-table__cell users-table__cell--numeric">
+                  {Math.round((tweets / days) * 100) / 100}{' '}
+                </td>
+                <td className="users-table__cell users-table__cell--numeric">
+                  <small>({tweets})</small>
                 </td>
               </tr>
             );
