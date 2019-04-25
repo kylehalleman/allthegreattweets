@@ -2,7 +2,7 @@
 
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import parse_qs
-from . import request
+from core import request
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -15,6 +15,6 @@ class Handler(BaseHTTPRequestHandler):
         query_string = self.path
         params = parse_qs(query_string[2:])
         username = params['name']
-        follower_list = request.oauth_req('friends/ids.json?screen_name=' + username)
-        self.wfile.write(str(follower_list).encode())
+        output = request.get_followed_tweets(request.get_followed_ids(username))
+        self.wfile.write(str(output).encode())
         return

@@ -11,3 +11,8 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(str("Hello from Python on Now 2.0!").encode())
         return
+
+    #return the following information to the frontend:
+    ## number of followed twitters surveyed (900 max)
+    ## timeframe surveyed
+    ## listing of twitter username - tweet count

@@ -1,7 +1,0 @@
-API_BASE_URL = 'https://api.twitter.com/1.1'
-
-CONSUMER_KEY = 'fqYAlU6lRpoFvWiOrTaSgRmHz'
-CONSUMER_SECRET = 'sdNJzBDMaRGQ1UAcpmJYeFQLygCyvxeTQpEnjJ5xiLFOvvAm97'
-
-ACCESS_KEY = '497370998-0bvV05BIwtWaGwHPAcJKorp0nvcYzTa9RLaFOhbV'
-ACCESS_SECRET = '8GsBrTgwniofjWUvWpifiOevcYsJg3pYul8JziXgTn3H6'
