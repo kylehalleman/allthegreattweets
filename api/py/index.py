@@ -35,7 +35,7 @@ class Handler(BaseHTTPRequestHandler):
         else:
             params = parse_qs(query_string[2:])
             if 'name' not in params:
-                output_str = 'Expected "name" query param.'
+                output_str = 'Expected "name" query param. params: ' + str(params) + '. path: ' + query_string
             else:
                 username = params['name']
                 # self.wfile.write('queried: ' + username)
