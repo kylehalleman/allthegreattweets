@@ -16,7 +16,7 @@ class Handler(BaseHTTPRequestHandler):
         query_string = self.path
         params = parse_qs(query_string[2:])
         username = params['name']
-        output = request.get_followed_tweets(request.get_followed_ids(username))
+        output = request.get_followed_tweets(request.get_followed_usernames(username))
         json_obj = {}
         following_list = []
         for username in output:
