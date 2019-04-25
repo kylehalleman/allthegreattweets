@@ -1,5 +1,6 @@
 import React from "react";
 import { withRouter } from "next/router";
+import "../style.styl";
 
 function Home({ router }) {
   function handleSubmit(e) {

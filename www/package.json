@@ -8,8 +8,10 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@zeit/next-stylus": "^1.0.1",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "stylus": "^0.54.5"
   },
   "devDependencies": {
     "next": "^8.1.0"
