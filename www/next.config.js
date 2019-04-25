@@ -1,6 +1,6 @@
-module.exports = {
-  target: 'serverless'
+const withStylus = require("@zeit/next-stylus");
+
+module.exports = withStylus({
+  target: "serverless"
   // Other options
-}
-const withStylus = require('@zeit/next-stylus')
-module.exports = withStylus()
+});
