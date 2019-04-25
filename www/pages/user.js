@@ -3,9 +3,7 @@ import fetch from "isomorphic-unfetch";
 
 function User({ url }) {
   useEffect(() => {
-    fetch(
-      `${window.location.origin}/api/get-follow-count?user=${url.query.name}`
-    );
+    fetch(`${window.location.origin}/api/py/request?user=${url.query.name}`);
   }, [url.query.name]);
   return <>User: {url.query.name}</>;
 }

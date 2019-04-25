@@ -1,13 +1,13 @@
 {
-	"version": 2,
-	"name": "allthegreattweets",
-	"builds": [
-			{ "src": "www/package.json", "use": "@now/next" },
-			{ "src": "api/*.js", "use": "@now/node" },
-			{ "src": "api/py/*.py", "use": "@now/python" }
-	],
-	"routes": [
-			{ "src": "/api/(.*)", "dest": "/api/$1" },
-			{ "src": "/(.*)", "dest": "/www/$1" }
-	]
+  "version": 2,
+  "name": "allthegreattweets",
+  "builds": [
+    { "src": "www/package.json", "use": "@now/next" },
+    { "src": "api/node/*.js", "use": "@now/node" },
+    { "src": "api/py/*.py", "use": "@now/python" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/www/$1" }
+  ]
 }
