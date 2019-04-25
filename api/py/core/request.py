@@ -17,6 +17,7 @@ MAX_USERS = 900
 INCLUDE_RTS = '&include_rts=1'
 EXCLUDE_REPLIES = '&exclude_replies=0'
 
+
 def oauth_req(url_suffix, key=ACCESS_KEY, secret=ACCESS_SECRET, http_method='GET', post_body='', http_headers=None):
     url = API_BASE_URL + '/' + url_suffix
     consumer = oauth2.Consumer(key=CONSUMER_KEY, secret=CONSUMER_SECRET)
@@ -26,26 +27,30 @@ def oauth_req(url_suffix, key=ACCESS_KEY, secret=ACCESS_SECRET, http_method='GET
     # print('RESP: ' + str(resp))
     return json.loads(content.decode())
 
+
 # obtain list of followed accounts
 # return up to 900 screen names in list
-def get_followed_ids(username):
-    follows_json = oauth_req('friends/ids.json?screen_name=' + username)
-    return follows_json['ids']
+def get_followed_usernames(username):
+    follows_json = oauth_req('friends/list.json?screen_name=' + username)
+    user_list = follows_json['users']
+    usernames = [x['screen_name'] for x in user_list]
+    return usernames
+
 
 # for each item in list of usernames, obtain up to 200 tweets
-def get_followed_tweets(userids):
+def get_followed_tweets(usernames):
     user_tweet_map = {}
-    max_index = MAX_USERS if len(userids) > MAX_USERS else len(userids)
-    for userid in userids[:max_index]:
+    max_index = MAX_USERS if len(usernames) > MAX_USERS else len(usernames)
+    for username in usernames[:max_index]:
         user_tweets = 0
-        tweets_list = oauth_req('statuses/user_timeline.json?user_id=' + str(userid) + EXCLUDE_REPLIES + INCLUDE_RTS + MAX_TWEETS)
+        tweets_list = oauth_req('statuses/user_timeline.json?screen_name=' + str(username) + EXCLUDE_REPLIES + INCLUDE_RTS + MAX_TWEETS)
 # filter tweets by timestamp
         current_time = datetime.datetime.now(datetime.timezone.utc)
         date_format = '%a %b %d %H:%M:%S %z %Y'
         for tweet in tweets_list:
             tweet_class = tweet.__class__.__name__
             if tweet_class == 'str':
-                print(tweet)
+                print('error for user {0}: {1}'.format(username, tweet))
                 continue
             timestamp = tweet['created_at']
             date_obj = datetime.datetime.strptime(timestamp, date_format)
@@ -53,8 +58,6 @@ def get_followed_tweets(userids):
             numdays = time_delta.days
             if numdays < 7 :
                 user_tweets+=1
-        user_tweet_map[userid]=user_tweets
+        user_tweet_map[username]=user_tweets
 # return map of username to count within timeframe
     return user_tweet_map
-
-# print(get_followed_tweets(get_followed_ids("luvz2vape")))
