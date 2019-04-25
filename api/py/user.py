@@ -15,5 +15,6 @@ class Handler(BaseHTTPRequestHandler):
         query_string = self.path
         params = parse_qs(query_string[2:])
         username = params['name']
-        self.wfile.write(str(request.oauth_req('friends/ids.json?screen_name=' + username)).encode())
+        follower_list = request.oauth_req('friends/ids.json?screen_name=' + username)
+        self.wfile.write(str(follower_list).encode())
         return
