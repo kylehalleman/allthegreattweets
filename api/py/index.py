@@ -7,14 +7,7 @@ import json
 import datetime
 import oauth2
 
-
 API_BASE_URL = 'https://api.twitter.com/1.1'
-
-CONSUMER_KEY = 'fqYAlU6lRpoFvWiOrTaSgRmHz'
-CONSUMER_SECRET = 'sdNJzBDMaRGQ1UAcpmJYeFQLygCyvxeTQpEnjJ5xiLFOvvAm97'
-
-ACCESS_KEY = '497370998-0bvV05BIwtWaGwHPAcJKorp0nvcYzTa9RLaFOhbV'
-ACCESS_SECRET = '8GsBrTgwniofjWUvWpifiOevcYsJg3pYul8JziXgTn3H6'
 
 MAX_TWEETS = '&count=200'
 MAX_USERS = 900
@@ -25,51 +18,51 @@ EXCLUDE_REPLIES = '&exclude_replies=0'
 class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
+        helper = TwitterApiHelper()
+        content_type, output = helper.get_request_output(self.path)
         self.send_response(200)
-        self.send_header('Content-type', 'application/text')
+        self.send_header('Content-type', content_type)
         self.end_headers()
-
-        api = ApiRequest()
-
-        output_str = ''
-        query_string = self.path  # /api/py?name=kylehalleman
-        path_prefix = '/api/py?'
-        if not query_string.startswith(path_prefix):
-            output_str = 'Expected path to start with "' + path_prefix + '". Actual: "' + query_string + '"'
-        else:
-            params = parse_qs(query_string[len(path_prefix):])
-            if 'name' not in params:
-                output_str = 'Expected "name" query param. params: ' + str(params) + '. path: ' + query_string
-            else:
-                names = params['name']
-                if len(names) == 0:
-                    output_str = 'no name provided'
-                else:
-                    username = params['name'][0]
-                    # self.wfile.write('queried: ' + username)
-                    output = api.get_followed_tweets(api.get_followed_usernames(username))
-                    json_obj = {}
-                    following_list = []
-                    for username in output:
-                        user_data = {'username': username, 'tweets': output[username]}
-                        following_list.append(user_data)
-                    json_obj['following'] = following_list
-                    output_str = json.dumps(json_obj, indent=2)
-        self.wfile.write(output_str.encode())
+        self.wfile.write(output.encode())
         return
 
 
-class ApiRequest(object):
+class TwitterApiHelper:
     def __init__(self):
-        pass
+        self.keys = {
+            'CONSUMER_KEY': 'fqYAlU6lRpoFvWiOrTaSgRmHz',
+            'CONSUMER_SECRET': 'sdNJzBDMaRGQ1UAcpmJYeFQLygCyvxeTQpEnjJ5xiLFOvvAm97',
+            'ACCESS_KEY': '497370998-0bvV05BIwtWaGwHPAcJKorp0nvcYzTa9RLaFOhbV',
+            'ACCESS_SECRET': '8GsBrTgwniofjWUvWpifiOevcYsJg3pYul8JziXgTn3H6'
+        }
 
-    def oauth_req(self, url_suffix, key=ACCESS_KEY, secret=ACCESS_SECRET, http_method='GET', post_body='', http_headers=None):
+    def get_request_output(self, path):
+        content_type = 'application/text'
+        path_prefix = '/api/py?'
+        if not path.startswith(path_prefix):
+            output = 'Expected path to start with "' + path_prefix + '". Actual: "' + path + '"'
+        else:
+            params = parse_qs(path[len(path_prefix):])
+            if 'name' not in params:
+                output = 'Expected "name" query param. params: ' + str(params) + '. path: ' + path
+            else:
+                names = params['name']
+                if len(names) == 0:
+                    output = 'no name provided'
+                else:
+                    content_type = 'application/json'
+                    username = params['name'][0]
+                    user_tweet_map = self.get_followed_tweets(self.get_followed_usernames(username))
+                    output = self.format_user_tweets(user_tweet_map)
+
+        return content_type, output
+
+    def oauth_req(self, url_suffix, http_method='GET', post_body='', http_headers=None):
         url = API_BASE_URL + '/' + url_suffix
-        consumer = oauth2.Consumer(key=CONSUMER_KEY, secret=CONSUMER_SECRET)
-        token = oauth2.Token(key=key, secret=secret)
+        consumer = oauth2.Consumer(key=self.keys['CONSUMER_KEY'], secret=self.keys['CONSUMER_SECRET'])
+        token = oauth2.Token(key=self.keys['ACCESS_KEY'], secret=self.keys['ACCESS_SECRET'])
         client = oauth2.Client(consumer, token)
         resp, content = client.request(url, method=http_method, body=post_body.encode(), headers=http_headers)
-        # print('RESP: ' + str(resp))
         return json.loads(content.decode())
 
     def get_followed_usernames(self, username):
@@ -77,6 +70,7 @@ class ApiRequest(object):
         follows_json = self.oauth_req('friends/list.json?screen_name=' + username + '&count=200')
         user_list = follows_json['users']
         usernames = [x['screen_name'] for x in user_list]
+        print('Num follows: ' + str(len(usernames)))
         return usernames
 
     def get_followed_tweets(self, usernames):
@@ -104,33 +98,22 @@ class ApiRequest(object):
         # return map of username to count within timeframe
         return user_tweet_map
 
-    def do_test(self):
-        output_str = ''
-        query_string = '/api/py?name=kylehalleman'
-        path_prefix = '/api/py?'
-        if not query_string.startswith(path_prefix):
-            output_str = 'Expected path to start with "' + path_prefix + '". Actual: "' + query_string + '"'
-        else:
-            params = parse_qs(query_string[len(path_prefix):])
-            if 'name' not in params:
-                output_str = 'Expected "name" query param. params: ' + str(params) + '. path: ' + query_string
-            else:
-                names = params['name']
-                if len(names) == 0:
-                    output_str = 'no name provided'
-                else:
-                    username = params['name'][0]
-                    # self.wfile.write('queried: ' + username)
-                    output = self.get_followed_tweets(self.get_followed_usernames(username))
-                    json_obj = {}
-                    following_list = []
-                    for username in output:
-                        user_data = {'username': username, 'tweets': output[username]}
-                        following_list.append(user_data)
-                    json_obj['following'] = following_list
-                    output_str = json.dumps(json_obj, indent=2)
-        print(output_str)
+    def format_user_tweets(self, user_tweet_map):
+        json_obj = {}
+        following_list = []
+        for username in user_tweet_map:
+            user_data = {'username': username, 'tweets': user_tweet_map[username]}
+            following_list.append(user_data)
+        json_obj['following'] = following_list
+        return json.dumps(json_obj, indent=2)
+
+
+def do_test():
+    helper = TwitterApiHelper()
+    content_type, content = helper.get_request_output('/api/py?name=luvz2vape')
+    print(content_type)
+    print(content)
+
 
 if __name__ == '__main__':
-    obj = ApiRequest()
-    obj.do_test()
+    do_test()
