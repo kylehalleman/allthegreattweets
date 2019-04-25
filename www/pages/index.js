@@ -9,9 +9,11 @@ function Home({ router }) {
   }
 
   return (
-    <div>
+    <div id="home">
+      <h1>all the great tweets</h1>
+      <h2>🦉</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="username" />
+        <input type="text" name="username" placeholder="twitter user" />
         <button type="submit">Submit</button>
       </form>
     </div>
