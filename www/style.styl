@@ -7,6 +7,10 @@
 	box-sizing: border-box;
 }
 
+html, body {
+	min-height: 100%;
+}
+
 html
 	font-family Pixels;
 	background: rgb(255,255,255);
@@ -17,6 +21,11 @@ html
 
 body {
 	margin: 0;
+	padding-top: 2em;
+	background-image: url(/static/PixelArt.png);
+	background-size: cover;
+	background-color: hsla(0, 100%, 100%, 0.5);
+	// background-blend-mode: screen;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -32,19 +41,28 @@ main
 h1, h2
 	text-align center
 	font-weight normal
-	font-size 5em
-	margin: 0.25em 0 0.5em
+	font-size 3em
+	margin: 0 0 1.5em
+
+h1 {
+	background-color: #001F3F;
+	color: white;
+	padding: 0.25em;
+	text-transform: uppercase;
+	box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
+}
+
 form
 	width 100%
 	text-align: center
 
 label
 	display: block;
-	font-size: 2em;
+	font-size: 1.25em;
 	margin-bottom: 0.5em;
 
 input, button
-	font-size 1.5em
+	font-size 1.25em
 	font-family Pixels;
 button
 	background-color rgba(46,46,46,1)
@@ -56,15 +74,19 @@ button
 input
 	width 100%
 	padding: 0.5em
-	border: 0.25em solid
-	padding-left: 2.8em;
+	// border: 0.25em solid
+	border: 0;
+	padding-left: 3.5em;
+	box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
 
 
 .submit-button {
 	margin: 1em auto 0;
 	padding: 0.5em 1em;
 	cursor: pointer;
-	border: 0.25em solid white
+	// border: 0.25em solid white;
+	border: 0;
+	box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
 }
 
 .input-wrapper {
