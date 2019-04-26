@@ -3,7 +3,8 @@
   "name": "allthegreattweets",
   "builds": [
     { "src": "www/package.json", "use": "@now/next" },
-    { "src": "api/py/**/*.py", "use": "@now/python" }
+    { "src": "api/py/**/*.py", "use": "@now/python" },
+    { "src": "api/node/*.js", "use": "@now/node" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
