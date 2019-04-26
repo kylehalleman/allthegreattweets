@@ -2,7 +2,7 @@
   "version": 2,
   "name": "allthegreattweets",
   "github": {
-    "enabled": true
+    "enabled": false
   },
   "env": {
     "TWITTER_API_KEY": "@twitter-api-key",
