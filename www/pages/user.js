@@ -30,11 +30,11 @@ function sortDescending(list) {
 }
 
 function User({ url, user }) {
-  console.log(user);
+  console.log(user.following);
   const days = 30;
   const [{ list, sort }, dispatch] = useReducer(reducer, {
     sort: 'descending',
-    list: sortDescending(json.following)
+    list: sortDescending(user.following)
   });
 
   function sortColumn() {
