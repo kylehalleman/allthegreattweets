@@ -1,6 +1,9 @@
 {
   "version": 2,
   "name": "allthegreattweets",
+  "github": {
+    "enabled": false
+  },
   "builds": [
     { "src": "www/package.json", "use": "@now/next" },
     { "src": "api/py/**/*.py", "use": "@now/python" },
