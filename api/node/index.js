@@ -8,10 +8,10 @@ function isWithin30Days(tweet) {
 }
 
 const oauthOptions = {
-  api_key: process.env.TWITTER_API_KEY,
-  api_secret_key: process.env.TWITTER_API_SECRET_KEY,
-  access_token: process.env.TWITTER_ACCESS_TOKEN,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+  api_key: process.env.TWITTER_API_KEY || '',
+  api_secret_key: process.env.TWITTER_API_SECRET_KEY || '',
+  access_token: process.env.TWITTER_ACCESS_TOKEN || '',
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET || ''
 };
 
 function rateLimitCheck(json) {
@@ -110,6 +110,9 @@ function searchViaTimelines(screen_name, results = [], queryParams) {
 
 function getFriendsList(username = 'kylehalleman') {
   console.time('request');
+  if (!oauthOptions.access_token) {
+    return 'No API keys';
+  }
   return twitterize({
     requestMethod: 'GET',
     endpoint: '/friends/list.json',
