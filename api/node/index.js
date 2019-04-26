@@ -7,20 +7,11 @@ function isWithin30Days(tweet) {
   return isAfter(new Date(tweet.created_at), subMonths(new Date(), 1));
 }
 
-const TWITTER_API_KEY = 'fqYAlU6lRpoFvWiOrTaSgRmHz';
-const TWITTER_API_SECRET_KEY =
-  'sdNJzBDMaRGQ1UAcpmJYeFQLygCyvxeTQpEnjJ5xiLFOvvAm97';
-const TWITTER_ACCESS_TOKEN =
-  '497370998-0bvV05BIwtWaGwHPAcJKorp0nvcYzTa9RLaFOhbV';
-const TWITTER_ACCESS_TOKEN_SECRET =
-  '8GsBrTgwniofjWUvWpifiOevcYsJg3pYul8JziXgTn3H6';
-
 const oauthOptions = {
-  api_key: process.env.TWITTER_API_KEY || TWITTER_API_KEY,
-  api_secret_key: process.env.TWITTER_API_SECRET_KEY || TWITTER_API_SECRET_KEY,
-  access_token: process.env.TWITTER_ACCESS_TOKEN || TWITTER_ACCESS_TOKEN,
-  access_token_secret:
-    process.env.TWITTER_ACCESS_TOKEN_SECRET || TWITTER_ACCESS_TOKEN_SECRET
+  api_key: process.env.TWITTER_API_KEY,
+  api_secret_key: process.env.TWITTER_API_SECRET_KEY,
+  access_token: process.env.TWITTER_ACCESS_TOKEN,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 };
 
 function rateLimitCheck(json) {
