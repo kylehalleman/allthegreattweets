@@ -1,6 +1,9 @@
-const withStylus = require("@zeit/next-stylus");
+const withStylus = require('@zeit/next-stylus');
 
 module.exports = withStylus({
-  target: "serverless"
+  target: 'serverless',
+  env: {
+    API_LANG: process.env.API_LANG
+  }
   // Other options
 });
