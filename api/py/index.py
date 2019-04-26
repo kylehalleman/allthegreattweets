@@ -6,14 +6,15 @@ import json
 # from core import request
 import datetime
 import oauth2
+import threading
+import time
 
 API_BASE_URL = 'https://api.twitter.com/1.1'
 
-MAX_TWEETS = '&count=200'
 MAX_USERS = 900
+MAX_TWEETS = '&count=200'
 INCLUDE_RTS = '&include_rts=1'
 EXCLUDE_REPLIES = '&exclude_replies=0'
-
 
 class Handler(BaseHTTPRequestHandler):
 
@@ -73,28 +74,40 @@ class TwitterApiHelper:
         print('Num follows: ' + str(len(usernames)))
         return usernames
 
+    def get_user_followed_tweets(self, username, user_tweet_map):
+        user_tweets = 0
+        tweets_list = self.oauth_req('statuses/user_timeline.json?screen_name=' + str(username) + '&trim_user=true' + EXCLUDE_REPLIES + INCLUDE_RTS + MAX_TWEETS)
+        # filter tweets by timestamp
+        current_time = datetime.datetime.now(datetime.timezone.utc)
+        date_format = '%a %b %d %H:%M:%S %z %Y'
+        for tweet in tweets_list:
+            tweet_class = tweet.__class__.__name__
+            if tweet_class == 'str':
+                print('error for user {0}: {1}'.format(username, tweet))
+                continue
+            timestamp = tweet['created_at']
+            date_obj = datetime.datetime.strptime(timestamp, date_format)
+            time_delta = current_time-date_obj
+            numdays = time_delta.days
+            if numdays < 7:
+                user_tweets += 1
+        user_tweet_map[username] = user_tweets
+
     def get_followed_tweets(self, usernames):
         """for each item in list of usernames, obtain up to 200 tweets"""
         user_tweet_map = {}
         max_index = MAX_USERS if len(usernames) > MAX_USERS else len(usernames)
-        for username in usernames[:max_index]:
-            user_tweets = 0
-            tweets_list = self.oauth_req('statuses/user_timeline.json?screen_name=' + str(username) + EXCLUDE_REPLIES + INCLUDE_RTS + MAX_TWEETS)
-            # filter tweets by timestamp
-            current_time = datetime.datetime.now(datetime.timezone.utc)
-            date_format = '%a %b %d %H:%M:%S %z %Y'
-            for tweet in tweets_list:
-                tweet_class = tweet.__class__.__name__
-                if tweet_class == 'str':
-                    print('error for user {0}: {1}'.format(username, tweet))
-                    continue
-                timestamp = tweet['created_at']
-                date_obj = datetime.datetime.strptime(timestamp, date_format)
-                time_delta = current_time-date_obj
-                numdays = time_delta.days
-                if numdays < 7:
-                    user_tweets += 1
-            user_tweet_map[username] = user_tweets
+        complete = max_index
+        start_index = 0
+
+        while complete > 0:
+            for username in usernames[start_index:start_index+5]:
+                task = threading.Thread(target=self.get_user_followed_tweets, args=(username, user_tweet_map))
+                task.start()
+            time.sleep(1)
+            start_index += 5
+            complete -= 5
+
         # return map of username to count within timeframe
         return user_tweet_map
 
@@ -109,10 +122,12 @@ class TwitterApiHelper:
 
 
 def do_test():
+    start_time = time.time()
     helper = TwitterApiHelper()
-    content_type, content = helper.get_request_output('/api/py?name=luvz2vape')
+    content_type, content = helper.get_request_output('/api/py?name=MiniMooosey')
     print(content_type)
     print(content)
+    print("--- %s seconds ---" % (time.time() - start_time))
 
 
 if __name__ == '__main__':
