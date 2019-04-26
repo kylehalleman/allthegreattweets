@@ -93,9 +93,10 @@ function User({ url, user }) {
 }
 
 User.getInitialProps = async ({ req, query }) => {
+  const lang = process.env.API_LANG || 'node';
   const url = req
-    ? `http://${req.headers.host}/api/node?name=${query.name}`
-    : `${window.location.origin}/api/node?name=${query.name}`;
+    ? `http://${req.headers.host}/api/${lang}?name=${query.name}`
+    : `${window.location.origin}/api/${lang}?name=${query.name}`;
   const user = await fetch(url);
   const json = await user.json();
   return { user: json.following };
