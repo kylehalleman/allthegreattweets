@@ -13,11 +13,19 @@
 
 .users-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 1em;
+}
+
+.users-table__row--header {
+  box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
+  color: white;
+  background-color: #001F3F;
 }
 
 .users-table__header {
-  border-bottom: 2px solid;
+
+
 }
 
 .users-table__cell {
@@ -50,7 +58,11 @@
 
 .users-table__body {}
 
-.users-table__row {}
+.users-table__row--body {
+  box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
+  background-color: hsla(0, 100%, 100%, 0.8);
+  box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
+}
 
 .users-table__cell {}
 

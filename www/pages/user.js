@@ -1,78 +1,41 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import './users.styl';
 import Head from '../components/head.js';
 import Main from '../components/main';
 
-function reducer(state, action) {
-  switch (action.type) {
-    case 'ascending':
-      return {
-        sort: 'ascending',
-        list: sortAscending(state.list)
-      };
-    case 'descending':
-      return {
-        sort: 'descending',
-        list: sortDescending(state.list)
-      };
-    default:
-      return state;
-  }
-}
-
-function sortAscending(list) {
-  return list.slice(0).sort((a, b) => a.tweets - b.tweets);
-}
-
-function sortDescending(list) {
-  return list.slice(0).sort((a, b) => b.tweets - a.tweets);
-}
-
-function User({ url, user }) {
+function User({ url, list }) {
   const days = 30;
-  const [{ list, sort }, dispatch] = useReducer(reducer, {
-    sort: 'descending',
-    list: sortDescending(user)
-  });
-
-  function sortColumn() {
-    dispatch({
-      type: sort === 'descending' ? 'ascending' : 'descending'
-    });
-  }
+  const total = list.reduce((acc, { tweets }) => acc + tweets, 0);
 
   return (
     <>
       <Head />
       <Main>
         <h1 className="heading">Who “{url.query.name}” follows</h1>
+        <span>Total tweets: {total}</span>
+        <span>Total tweets per day: {total / 30}</span>
         <table className="users-table">
           <thead className="users-table__header">
-            <tr>
+            <tr className="users-table__row users-table__row--header">
               <th className="users-table__cell users-table__cell--column users-table__cell--user">
                 Username
               </th>
-              <th
-                className="users-table__cell users-table__cell--column users-table__cell--numeric"
-                aria-sort={sort}
-              >
-                <button className="users-table__sort" onClick={sortColumn}>
-                  <span aria-hidden="true">
-                    {sort === 'descending' ? '👇' : '👆'}
-                  </span>
-                  Tweets Per Day <span className="sr-only">click to sort</span>
-                </button>
+              <th className="users-table__cell users-table__cell--column users-table__cell--numeric">
+                Tweets Per Day
               </th>
               <th className="users-table__cell users-table__cell--column users-table__cell--numeric users-table__cell--user">
-                (total)
+                Total
               </th>
             </tr>
           </thead>
           <tbody className="users-table__body">
             {list.map(({ username, tweets }) => {
               return (
-                <tr key={username} className="users-table__row">
+                <tr
+                  key={username}
+                  className="users-table__row users-table__row--body"
+                >
                   <td className="users-table__cell users-table__cell--user">
                     <a href={`https://twitter.com/${username}`}>@{username}</a>
                   </td>
@@ -80,7 +43,7 @@ function User({ url, user }) {
                     {Math.round((tweets / days) * 100) / 100}{' '}
                   </td>
                   <td className="users-table__cell users-table__cell--numeric">
-                    <small>({tweets})</small>
+                    <small>{tweets}</small>
                   </td>
                 </tr>
               );
