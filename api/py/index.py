@@ -67,9 +67,19 @@ class TwitterApiHelper:
         return json.loads(content.decode())
 
     def get_followed_usernames(self, username):
-        """obtain list of followed accounts. return up to 900 screen names in list"""
-        follows_json = self.oauth_req('friends/list.json?screen_name=' + username + '&count=200')
+        """obtain list of followed accounts. return up to 200 screen names per page"""
+        cursor = '1'
+        follows_json = self.oauth_req('friends/list.json?screen_name=' + username + '&count=200&skip_status=1')
         user_list = follows_json['users']
+
+        while cursor != '0':
+            cursor = str(follows_json.get('next_cursor', '0'))
+            if cursor != '0':
+                follows_json = self.oauth_req('friends/list.json?screen_name=' + username + '&count=200&skip_status=1&cursor=' + cursor)
+                page_users = follows_json['users']
+                for user in page_users:
+                    user_list.append(user)
+
         usernames = [x['screen_name'] for x in user_list]
         print('Num follows: ' + str(len(usernames)))
         return usernames
@@ -101,12 +111,12 @@ class TwitterApiHelper:
         start_index = 0
 
         while complete > 0:
-            for username in usernames[start_index:start_index+5]:
+            for username in usernames[start_index:start_index+10]:
                 task = threading.Thread(target=self.get_user_followed_tweets, args=(username, user_tweet_map))
                 task.start()
             time.sleep(1)
-            start_index += 5
-            complete -= 5
+            start_index += 10
+            complete -= 10
 
         # return map of username to count within timeframe
         return user_tweet_map
