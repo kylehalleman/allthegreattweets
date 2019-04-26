@@ -94,11 +94,11 @@ function User({ url, user }) {
 
 User.getInitialProps = async ({ req, query }) => {
   const url = req
-    ? `http://${req.headers.host}/api/node?name=${query.name}`
-    : `${window.location.origin}/api/node?name=${query.name}`;
+    ? `http://${req.headers.host}/api/py?name=${query.name}`
+    : `${window.location.origin}/api/py?name=${query.name}`;
   const user = await fetch(url);
   const json = await user.json();
-  return { user: json };
+  return { user: json.following };
 };
 
 export default User;
