@@ -81,7 +81,7 @@ class TwitterApiHelper:
     def get_user_followed_tweets(self, username, user_tweet_map):
         user_tweets = 0
         tweets_list = self.oauth_req('statuses/user_timeline.json?screen_name=' + str(username) + '&trim_user=true' + EXCLUDE_REPLIES + INCLUDE_RTS + MAX_TWEETS)
-        max_id = tweets_list.keys(-1).get('id_str')
+        max_id = tweets_list.get('id_str')[-1]
         paginate = True
         final_tweets_list = [tweets_list]
 
@@ -89,8 +89,8 @@ class TwitterApiHelper:
             tweets_list_page = self.oauth_req('statuses/user_timeline.json?screen_name=' + str(username) + '&trim_user=true&max_id=' + max_id + EXCLUDE_REPLIES + INCLUDE_RTS + MAX_TWEETS)
             for tweet in tweets_list_page:
                 final_tweets_list.append(tweet)
-            max_id = tweets_list_page.keys(-1).get('id_str')
-            if len(tweets_list_page < 200):
+            max_id = tweets_list_page.get('id_str')[-1]
+            if len(tweets_list_page) < 200:
                 paginate = False
 
         # filter tweets by timestamp
@@ -105,7 +105,7 @@ class TwitterApiHelper:
             date_obj = datetime.datetime.strptime(timestamp, date_format)
             time_delta = current_time-date_obj
             numdays = time_delta.days
-            if numdays < 7:
+            if numdays < 30:
                 user_tweets += 1
         user_tweet_map[username] = user_tweets
 
