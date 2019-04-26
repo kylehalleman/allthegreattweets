@@ -93,7 +93,7 @@ function User({ url, user }) {
 }
 
 User.getInitialProps = async ({ req, query }) => {
-  const lang = process.env.API_LANG || 'node';
+  const lang = process.env.API_LANG || 'py';
   const url = req
     ? `http://${req.headers.host}/api/${lang}?name=${query.name}`
     : `${window.location.origin}/api/${lang}?name=${query.name}`;
