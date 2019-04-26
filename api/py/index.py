@@ -54,8 +54,8 @@ class TwitterApiHelper:
 
     def oauth_req(self, url_suffix, http_method='GET', post_body='', http_headers=None):
         url = API_BASE_URL + '/' + url_suffix
-        consumer = oauth2.Consumer(key=os.environ['CONSUMER_KEY'], secret=os.environ['CONSUMER_SECRET'])
-        token = oauth2.Token(key=os.environ['ACCESS_KEY'], secret=os.environ[str('ACCESS_SECRET')])
+        consumer = oauth2.Consumer(key=os.environ['TWITTER_API_KEY'], secret=os.environ['TWITTER_API_SECRET_KEY'])
+        token = oauth2.Token(key=os.environ['TWITTER_ACCESS_TOKEN'], secret=os.environ[str('TWITTER_ACCESS_TOKEN_SECRET')])
         client = oauth2.Client(consumer, token)
         resp, content = client.request(url, method=http_method, body=post_body.encode(), headers=http_headers)
         return json.loads(content.decode())
