@@ -8,6 +8,7 @@ import datetime
 import oauth2
 import threading
 import time
+import os
 
 API_BASE_URL = 'https://api.twitter.com/1.1'
 
@@ -29,13 +30,6 @@ class Handler(BaseHTTPRequestHandler):
 
 
 class TwitterApiHelper:
-    def __init__(self):
-        self.keys = {
-            'CONSUMER_KEY': 'fqYAlU6lRpoFvWiOrTaSgRmHz',
-            'CONSUMER_SECRET': 'sdNJzBDMaRGQ1UAcpmJYeFQLygCyvxeTQpEnjJ5xiLFOvvAm97',
-            'ACCESS_KEY': '497370998-0bvV05BIwtWaGwHPAcJKorp0nvcYzTa9RLaFOhbV',
-            'ACCESS_SECRET': '8GsBrTgwniofjWUvWpifiOevcYsJg3pYul8JziXgTn3H6'
-        }
 
     def get_request_output(self, path):
         content_type = 'application/text'
@@ -60,8 +54,8 @@ class TwitterApiHelper:
 
     def oauth_req(self, url_suffix, http_method='GET', post_body='', http_headers=None):
         url = API_BASE_URL + '/' + url_suffix
-        consumer = oauth2.Consumer(key=self.keys['CONSUMER_KEY'], secret=self.keys['CONSUMER_SECRET'])
-        token = oauth2.Token(key=self.keys['ACCESS_KEY'], secret=self.keys['ACCESS_SECRET'])
+        consumer = oauth2.Consumer(key=os.environ['CONSUMER_KEY'], secret=os.environ['CONSUMER_SECRET'])
+        token = oauth2.Token(key=os.environ['ACCESS_KEY'], secret=os.environ[str('ACCESS_SECRET')])
         client = oauth2.Client(consumer, token)
         resp, content = client.request(url, method=http_method, body=post_body.encode(), headers=http_headers)
         return json.loads(content.decode())
@@ -87,10 +81,22 @@ class TwitterApiHelper:
     def get_user_followed_tweets(self, username, user_tweet_map):
         user_tweets = 0
         tweets_list = self.oauth_req('statuses/user_timeline.json?screen_name=' + str(username) + '&trim_user=true' + EXCLUDE_REPLIES + INCLUDE_RTS + MAX_TWEETS)
+        max_id = tweets_list.keys(-1).get('id_str')
+        paginate = True
+        final_tweets_list = [tweets_list]
+
+        while paginate:
+            tweets_list_page = self.oauth_req('statuses/user_timeline.json?screen_name=' + str(username) + '&trim_user=true&max_id=' + max_id + EXCLUDE_REPLIES + INCLUDE_RTS + MAX_TWEETS)
+            for tweet in tweets_list_page:
+                final_tweets_list.append(tweet)
+            max_id = tweets_list_page.keys(-1).get('id_str')
+            if len(tweets_list_page < 200):
+                paginate = False
+
         # filter tweets by timestamp
         current_time = datetime.datetime.now(datetime.timezone.utc)
         date_format = '%a %b %d %H:%M:%S %z %Y'
-        for tweet in tweets_list:
+        for tweet in final_tweets_list:
             tweet_class = tweet.__class__.__name__
             if tweet_class == 'str':
                 print('error for user {0}: {1}'.format(username, tweet))
@@ -111,12 +117,12 @@ class TwitterApiHelper:
         start_index = 0
 
         while complete > 0:
-            for username in usernames[start_index:start_index+10]:
+            for username in usernames[start_index:start_index+100]:
                 task = threading.Thread(target=self.get_user_followed_tweets, args=(username, user_tweet_map))
                 task.start()
             time.sleep(1)
-            start_index += 10
-            complete -= 10
+            start_index += 100
+            complete -= 100
 
         # return map of username to count within timeframe
         return user_tweet_map
