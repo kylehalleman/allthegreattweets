@@ -46,7 +46,7 @@ function User({ url, user }) {
   return (
     <>
       <Head />
-      <h1 className="heading">Who {url.query.name} follows</h1>
+      <h1 className="heading">Who “{url.query.name}” follows</h1>
       <table className="users-table">
         <thead className="users-table__header">
           <tr>
@@ -74,7 +74,7 @@ function User({ url, user }) {
             return (
               <tr key={username} className="users-table__row">
                 <td className="users-table__cell users-table__cell--user">
-                  {username}
+                  <a href={`https://twitter.com/${username}`}>@{username}</a>
                 </td>
                 <td className="users-table__cell users-table__cell--numeric">
                   {Math.round((tweets / days) * 100) / 100}{' '}

@@ -1,7 +1,7 @@
-import React from "react";
-import { withRouter } from "next/router";
-import "../style.styl";
-import Head from "../components/head";
+import React from 'react';
+import { withRouter } from 'next/router';
+import '../style.styl';
+import Head from '../components/head';
 
 function Home({ router }) {
   function handleSubmit(e) {
@@ -15,8 +15,19 @@ function Home({ router }) {
       <h1>all the great tweets</h1>
       <h2>🦉</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="username" placeholder="twitter user" />
-        <button type="submit">Submit</button>
+        <label for="username">enter a Twitter handle</label>
+        <div className="input-wrapper">
+          <input
+            id="username"
+            type="text"
+            name="username"
+            placeholder="nihilist_arbys"
+          />
+        </div>
+
+        <button className="submit-button" type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );
