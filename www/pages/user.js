@@ -13,7 +13,9 @@ function User({ url, list }) {
     <>
       <Head />
       <Main>
-        <h1 className="heading">Who @{url.query.name} follows</h1>
+        <h1 className="heading">
+          Who <span className="username">@{url.query.name}</span> follows
+        </h1>
 
         <div role="table" className="users-table">
           <div role="rowgroup" className="users-table__header large-only">
@@ -61,7 +63,7 @@ function User({ url, list }) {
                     className="users-table__cell users-table__cell--numeric"
                   >
                     <span className="small-only" aria-hidden="true">
-                      Tweets per day:{' '}
+                      Tweets Per Day:{' '}
                     </span>
                     <span>{Math.round((tweets / days) * 100) / 100}</span>
                   </div>
@@ -94,7 +96,7 @@ function User({ url, list }) {
                 className="users-table__cell users-table__cell--numeric"
               >
                 <span className="small-only" aria-hidden="true">
-                  Tweets per day:{' '}
+                  Tweets Per Day:{' '}
                 </span>
                 <span>{Math.round((total / 30) * 100) / 100}</span>
               </div>
