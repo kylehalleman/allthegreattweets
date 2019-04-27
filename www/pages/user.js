@@ -5,7 +5,7 @@ import Head from '../components/head.js';
 import Main from '../components/main';
 import Image from '../components/image';
 
-function User({ url, list }) {
+function User({ name, list }) {
   const days = 30;
   const total = list.reduce((acc, { tweets }) => acc + tweets, 0);
 
@@ -14,7 +14,7 @@ function User({ url, list }) {
       <Head />
       <Main>
         <h1 className="heading">
-          Who <span className="username">@{url.query.name}</span> follows
+          Who <span className="username">@{name}</span> follows
         </h1>
 
         <div role="table" className="users-table">
@@ -55,7 +55,7 @@ function User({ url, list }) {
                     role="cell"
                     className="users-table__cell users-table__cell--user"
                   >
-                    <Image src={image} />
+                    <Image src={image} username={username} />
                     <a href={`https://twitter.com/${username}`}>@{username}</a>
                   </div>
                   <div
@@ -124,7 +124,7 @@ User.getInitialProps = async ({ req, query }) => {
     : `${window.location.origin}/api/${lang}?name=${query.name}`;
   const user = await fetch(url);
   const json = await user.json();
-  return { list: json.following };
+  return { name: query.name, list: json.following };
 };
 
 export default User;
