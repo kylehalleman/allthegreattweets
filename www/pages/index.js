@@ -17,6 +17,7 @@ function Home({ router }) {
       <Main>
         <h1>all the great tweets 🦉</h1>
         <form onSubmit={handleSubmit} action="/user">
+          <input type="hidden" name="months" value="1" />
           <label htmlFor="username">enter a Twitter handle</label>
           <div className="input-wrapper">
             <input
