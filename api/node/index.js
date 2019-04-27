@@ -124,8 +124,6 @@ function getFriendsList(username = 'kylehalleman') {
     })
     .then(data => {
       console.timeEnd('request');
-      console.log('done, maybe');
-      console.log(data);
       return data.slice(0).sort((a, b) => b.tweets - a.tweets);
     })
     .catch(e => console.log(e));
