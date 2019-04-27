@@ -118,8 +118,8 @@ function getFriendsList(username = 'kylehalleman') {
   })
     .then(getFriends)
     .then(friends => {
-      return Promise.all([searchViaTimelines(friends[0])]);
-      // return Promise.all(friends.map(friend => searchViaTimelines(friend)));
+      // return Promise.all([searchViaTimelines(friends[0])]);
+      return Promise.all(friends.map(friend => searchViaTimelines(friend)));
       // return Promise.all(friends.map(friend => searchLastWeek(friend)));
     })
     .then(data => {
