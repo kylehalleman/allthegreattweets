@@ -19,11 +19,7 @@
 
 .users-table__row {
   display: flex;
-  padding-right: 0.5em;
-}
 
-.users-table__cell--column--user {
-  padding-left: 0.5em;
 }
 
 .users-table__row--header {
@@ -36,21 +32,13 @@
 }
 
 .users-table__header {
-
-
 }
 
 .users-table__cell {
   padding: 0.25em;
-
 }
 
 .users-table__cell--column {
-
-}
-
-.users-table__cell--numeric {
-  // display: inline-block;
 }
 
 .users-table__cell--user {
@@ -58,12 +46,20 @@
   flex: 1 0 auto;
   display: flex;
   align-items: center;
+  padding: 0;
+}
+
+.users-table__cell--column--user {
+  padding-left: 0.5em;
 }
 
 .users-table__cell--numeric {
   text-align: right;
-  flex: 0 0 auto;
-  width: 10em;
+  flex: 1 0 auto;
+  width: 100%;
+  padding: 0.25em;
+  background-color: #001f3f;
+  color: white;
 }
 
 .users-table__sort {
@@ -82,9 +78,8 @@
   box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
   align-items: center;
   margin: 0.75em 0;
+  flex-wrap: wrap;
 }
-
-.users-table__cell {}
 
 .tweets-cell {
   display: inline-flex;
@@ -107,4 +102,46 @@
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   margin-right: 1em;
+}
+
+.users-table__row--footer {
+  box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
+  color: white;
+  background-color: #001F3F;
+  align-items: flex-start;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  flex-wrap: wrap;
+}
+
+.large-only {
+  display: none;
+  visibility: hidden;
+}
+
+@media (min-width: 40em) {
+  .users-table__row {
+    padding-right: 0.5em;
+  }
+
+  .users-table__cell--numeric {
+    flex: 0 0 auto;
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+    width: 10em;
+  }
+
+  .users-table__row--body {
+    flex-wrap: nowrap;
+  }
+
+  .users-table__row--footer {
+    flex-wrap: nowrap;
+  }
+
+  .small-only {
+    display: none;
+    visibility: hidden;
+  }
 }

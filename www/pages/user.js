@@ -16,7 +16,7 @@ function User({ url, list }) {
         <h1 className="heading">Who @{url.query.name} follows</h1>
 
         <div role="table" className="users-table">
-          <div role="rowgroup" className="users-table__header">
+          <div role="rowgroup" className="users-table__header large-only">
             <div
               role="row"
               className="users-table__row users-table__row--header"
@@ -60,13 +60,19 @@ function User({ url, list }) {
                     role="cell"
                     className="users-table__cell users-table__cell--numeric"
                   >
-                    {Math.round((tweets / days) * 100) / 100}{' '}
+                    <span className="small-only" aria-hidden="true">
+                      Tweets per day
+                    </span>
+                    <span>{Math.round((tweets / days) * 100) / 100}</span>
                   </div>
                   <div
                     role="cell"
                     className="users-table__cell users-table__cell--numeric"
                   >
-                    {tweets}
+                    <span className="small-only" aria-hidden="true">
+                      Total
+                    </span>
+                    <span>{tweets}</span>
                   </div>
                 </div>
               );
@@ -77,14 +83,29 @@ function User({ url, list }) {
               role="row"
               className="users-table__row users-table__row--footer"
             >
-              <div role="rowheader" className="users-table__cell">
+              <div
+                role="rowheader"
+                className="users-table__cell users-table__cell--column--user users-table__cell--user"
+              >
                 Totals
               </div>
-              <div role="cell" className="users-table__cell">
-                {total}
+              <div
+                role="cell"
+                className="users-table__cell users-table__cell--numeric"
+              >
+                <span className="small-only" aria-hidden="true">
+                  Tweets per day
+                </span>
+                <span>{Math.round((total / 30) * 100) / 100}</span>
               </div>
-              <div role="cell" className="users-table__cell">
-                {Math.round((total / 30) * 100) / 100}
+              <div
+                role="cell"
+                className="users-table__cell users-table__cell--numeric"
+              >
+                <span className="small-only" aria-hidden="true">
+                  Total
+                </span>
+                <span>{total}</span>
               </div>
             </div>
           </div>
