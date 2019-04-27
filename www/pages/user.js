@@ -62,7 +62,7 @@ User.getInitialProps = async ({ req, query }) => {
     : `${window.location.origin}/api/${lang}?name=${query.name}`;
   const user = await fetch(url);
   const json = await user.json();
-  return { user: json.following };
+  return { list: json.following };
 };
 
 export default User;
