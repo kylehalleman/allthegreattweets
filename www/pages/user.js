@@ -14,8 +14,6 @@ function User({ url, list }) {
       <Head />
       <Main>
         <h1 className="heading">Who @{url.query.name} follows</h1>
-        <span>Total tweets: {total}</span>
-        <span>Total tweets per day: {total / 30}</span>
 
         <div role="table" className="users-table">
           <div role="rowgroup" className="users-table__header">
@@ -25,7 +23,7 @@ function User({ url, list }) {
             >
               <div
                 role="columnheader"
-                className="users-table__cell users-table__cell--column users-table__cell--user"
+                className="users-table__cell users-table__cell--column users-table__cell--column--user users-table__cell--user"
               >
                 Username
               </div>
@@ -73,6 +71,22 @@ function User({ url, list }) {
                 </div>
               );
             })}
+          </div>
+          <div role="rowgroup" className="users-table__footer">
+            <div
+              role="row"
+              className="users-table__row users-table__row--footer"
+            >
+              <div role="rowheader" className="users-table__cell">
+                Totals
+              </div>
+              <div role="cell" className="users-table__cell">
+                {total}
+              </div>
+              <div role="cell" className="users-table__cell">
+                {Math.round((total / 30) * 100) / 100}
+              </div>
+            </div>
           </div>
         </div>
       </Main>
