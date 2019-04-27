@@ -129,13 +129,11 @@ function getFriendsList(months = 1, username = 'kylehalleman') {
     queryParams: { screen_name: username, count: 200 }
   })
     .then(getFriends)
-    .then(friends => {
-      // return Promise.all([searchViaTimelines(friends[0])]);
-      return Promise.all(
+    .then(friends =>
+      Promise.all(
         friends.map(friend => searchViaTimelinesCurry(months)(friend))
-      );
-      // return Promise.all(friends.map(friend => searchLastWeek(friend)));
-    })
+      )
+    )
     .then(data => {
       console.timeEnd('request');
       return data.slice(0).sort((a, b) => b.tweets - a.tweets);
@@ -145,9 +143,11 @@ function getFriendsList(months = 1, username = 'kylehalleman') {
 module.exports = (req, res) => {
   // @todo handle for rate limit exceeded
 
-  const parsed = url.parse(req.url, true);
+  const query = url.parse(req.url, true).query;
+  const months =
+    typeof query.months === 'undefined' ? 1 : parseInt(query.months);
 
-  getFriendsList(parseInt(parsed.query.months), parsed.query.name)
+  getFriendsList(months, query.name)
     .then(data => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ following: data }));

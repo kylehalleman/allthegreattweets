@@ -13,7 +13,7 @@ function User({ error, name, list, router }) {
 
   return (
     <>
-      <Head />
+      <Head title={`Who @${name} follows | All the Great Tweets 🦉`} />
       <Main>
         <h1 className="heading">
           Who <span className="username">@{name}</span> follows

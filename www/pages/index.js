@@ -6,14 +6,16 @@ import Main from '../components/main';
 function Home({ router }) {
   function handleSubmit(e) {
     e.preventDefault();
-    router.push(`/user?name=${e.target.elements.username.value}`);
+    router.push(
+      `/user?name=${e.target.elements.username.value}&months=${
+        e.target.elements.months.value
+      }`
+    );
   }
 
   return (
     <>
-      <Head>
-        <title>All the Great Tweets 🦉</title>
-      </Head>
+      <Head title="Search | All the Great Tweets 🦉" />
       <Main>
         <h1>all the great tweets 🦉</h1>
         <form onSubmit={handleSubmit} action="/user">
