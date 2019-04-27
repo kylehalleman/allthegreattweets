@@ -7,9 +7,13 @@ import Head from '../components/head.js';
 import Main from '../components/main';
 import Image from '../components/image';
 
-function User({ error, name, list, router }) {
+const MONTHS = [1, 3, 6];
+
+function User({ error, name, list, router: { pathname, query } }) {
   const days = 30;
   const total = list.reduce((acc, { tweets }) => acc + tweets, 0);
+  const currentRange =
+    typeof query.months === 'undefined' ? 1 : parseInt(query.months);
 
   return (
     <>
@@ -23,36 +27,27 @@ function User({ error, name, list, router }) {
         ) : (
           <>
             <div className="button-group">
-              <Link
-                href={{
-                  pathname: router.pathname,
-                  query: Object.assign({}, router.query, {
-                    months: 1
-                  })
-                }}
-              >
-                1 month
-              </Link>
-              <Link
-                href={{
-                  pathname: router.pathname,
-                  query: Object.assign({}, router.query, {
-                    months: 3
-                  })
-                }}
-              >
-                3 months
-              </Link>
-              <Link
-                href={{
-                  pathname: router.pathname,
-                  query: Object.assign({}, router.query, {
-                    months: 6
-                  })
-                }}
-              >
-                6 months
-              </Link>
+              <span id="set-range" className="time-range">
+                Set time range
+              </span>
+              {MONTHS.map(months => (
+                <Link
+                  href={{
+                    pathname,
+                    query: Object.assign({}, query, {
+                      months
+                    })
+                  }}
+                >
+                  <a
+                    className="range-link"
+                    aria-current={currentRange === months ? 'page' : false}
+                    aria-describedby="set-range"
+                  >
+                    {months} {months === 1 ? 'month' : 'months'}
+                  </a>
+                </Link>
+              ))}
             </div>
             <div role="table" className="users-table">
               <div role="rowgroup" className="users-table__header large-only">

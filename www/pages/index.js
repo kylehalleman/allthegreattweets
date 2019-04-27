@@ -27,6 +27,10 @@ function Home({ router }) {
               type="text"
               name="name"
               placeholder="nihilist_arbys"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
             />
           </div>
 

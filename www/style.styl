@@ -3,21 +3,25 @@
   src: url('/static/Apple2.woff') format('woff');
 }
 
+:root {
+	--main-color: #001f3f;
+	--accent-color: #b71540;
+	--light-color: #fff;
+}
+
 *, *::before, *::after {
 	box-sizing: border-box;
 }
 
 html, body {
 	min-height: 100%;
+	font-family Pixels;
 }
 
 html
-	font-family Pixels;
-	background: rgb(255,255,255);
-	background: linear-gradient(0deg, rgba(0,212,255,1) 10%, #7FDBFF 90%);
-	background-attachment fixed
+	background-color: var(--light-color);
 	height 100%
-	color #001F3F
+	color var(--main-color)
 
 body {
 	margin: 0;
@@ -25,7 +29,6 @@ body {
 	background-image: url(/static/PixelArt.png);
 	background-size: contain;
 	background-color: hsla(0, 100%, 100%, 0.5);
-	// background-blend-mode: screen;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -33,12 +36,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-	color: #001F3F;
+	color: var(--main-color);
+	border-bottom: 2px solid;
 }
 
 main
 	margin: 0 auto;
-	padding: 0 1em;
+	padding: 0 1.5em;
 	width: 100%;
 	max-width: 50em;
 
@@ -49,8 +53,8 @@ h1, h2
 	margin: 0 0 1.5em
 
 h1 {
-	background-color: #001F3F;
-	color: white;
+	background-color: var(--main-color);
+	color: var(--light-color);
 	padding: 0.25em;
 	text-transform: uppercase;
 	box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
@@ -72,7 +76,6 @@ input, button
 input
 	width 100%
 	padding: 0.5em
-	// border: 0.25em solid
 	border-radius: 0;
 	border: 0;
 	-webkit-appearance: none;
@@ -80,10 +83,24 @@ input
 	padding-left: 3.5em;
 	box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
 
+input:focus {
+	outline: none;
+	box-shadow:
+		0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em,
+		0.5em 0 var(--accent-color),
+		0 0.5em var(--accent-color),
+		-0.5em 0 var(--accent-color),
+		0 -0.5em var(--accent-color),
+		0.25em 0.25em var(--accent-color),
+		-0.25em 0.25em var(--accent-color),
+		0.25em -0.25em var(--accent-color),
+		-0.25em -0.25em var(--accent-color);
+}
+
 
 .submit-button {
-	background-color #001F3F
-	color white
+	background-color var(--main-color)
+	color var(--light-color)
 	margin: 1em auto 0;
 	padding: 0.5em 1em;
 	cursor: pointer;
@@ -93,8 +110,8 @@ input
 
 .submit-button:focus,
 .submit-button:hover {
-	background-color: white;
-	color: #001F3F;
+	background-color: var(--light-color);
+	color: var(--main-color);
 }
 
 .input-wrapper {
@@ -108,7 +125,7 @@ input
   top: 0;
   font-size: 1.5em;
   height: 100%;
-  border-right: 0.25em solid black;
+  border-right: 0.25em solid var(--main-color);
   width: 2.5em;
 	line-height: 2
 	text-indent: 0.25em
