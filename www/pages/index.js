@@ -16,13 +16,13 @@ function Home({ router }) {
       </Head>
       <Main>
         <h1>all the great tweets 🦉</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} action="/user">
           <label htmlFor="username">enter a Twitter handle</label>
           <div className="input-wrapper">
             <input
               id="username"
               type="text"
-              name="username"
+              name="name"
               placeholder="nihilist_arbys"
             />
           </div>
