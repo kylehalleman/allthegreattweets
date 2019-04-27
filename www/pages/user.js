@@ -3,6 +3,7 @@ import fetch from 'isomorphic-unfetch';
 import './users.styl';
 import Head from '../components/head.js';
 import Main from '../components/main';
+import Image from '../components/image';
 
 function User({ url, list }) {
   const days = 30;
@@ -12,51 +13,75 @@ function User({ url, list }) {
     <>
       <Head />
       <Main>
-        <h1 className="heading">Who “{url.query.name}” follows</h1>
+        <h1 className="heading">Who @{url.query.name} follows</h1>
         <span>Total tweets: {total}</span>
         <span>Total tweets per day: {total / 30}</span>
-        <table className="users-table">
-          <thead className="users-table__header">
-            <tr className="users-table__row users-table__row--header">
-              <th className="users-table__cell users-table__cell--column users-table__cell--user">
+
+        <div role="table" className="users-table">
+          <div role="rowgroup" className="users-table__header">
+            <div
+              role="row"
+              className="users-table__row users-table__row--header"
+            >
+              <div
+                role="columnheader"
+                className="users-table__cell users-table__cell--column users-table__cell--user"
+              >
                 Username
-              </th>
-              <th className="users-table__cell users-table__cell--column users-table__cell--numeric">
+              </div>
+              <div
+                role="columnheader"
+                className="users-table__cell users-table__cell--column users-table__cell--numeric"
+              >
                 Tweets Per Day
-              </th>
-              <th className="users-table__cell users-table__cell--column users-table__cell--numeric users-table__cell--user">
+              </div>
+              <div
+                role="columnheader"
+                className="users-table__cell users-table__cell--column users-table__cell--numeric"
+              >
                 Total
-              </th>
-            </tr>
-          </thead>
-          <tbody className="users-table__body">
-            {list.map(({ username, tweets }) => {
+              </div>
+            </div>
+          </div>
+          <div role="rowgroup" className="users-table__body">
+            {list.map(({ username, tweets, image }, i) => {
               return (
-                <tr
+                <div
                   key={username}
+                  role="row"
                   className="users-table__row users-table__row--body"
                 >
-                  <td className="users-table__cell users-table__cell--user">
+                  <div
+                    role="cell"
+                    className="users-table__cell users-table__cell--user"
+                  >
+                    <Image src={image} />
                     <a href={`https://twitter.com/${username}`}>@{username}</a>
-                  </td>
-                  <td className="users-table__cell users-table__cell--numeric">
+                  </div>
+                  <div
+                    role="cell"
+                    className="users-table__cell users-table__cell--numeric"
+                  >
                     {Math.round((tweets / days) * 100) / 100}{' '}
-                  </td>
-                  <td className="users-table__cell users-table__cell--numeric">
-                    <small>{tweets}</small>
-                  </td>
-                </tr>
+                  </div>
+                  <div
+                    role="cell"
+                    className="users-table__cell users-table__cell--numeric"
+                  >
+                    {tweets}
+                  </div>
+                </div>
               );
             })}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </Main>
     </>
   );
 }
 
 User.getInitialProps = async ({ req, query }) => {
-  const lang = process.env.API_LANG || 'py';
+  const lang = process.env.API_LANG || 'node';
   const url = req
     ? `http://${req.headers.host}/api/${lang}?name=${query.name}`
     : `${window.location.origin}/api/${lang}?name=${query.name}`;

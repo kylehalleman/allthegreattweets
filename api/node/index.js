@@ -24,7 +24,10 @@ const getFriends = obj => {
     throw new Error('Rate limited!');
   }
   if (data.users) {
-    return data.users.map(({ screen_name }) => screen_name);
+    return data.users.map(({ screen_name, profile_image_url_https }) => ({
+      screen_name,
+      image: profile_image_url_https
+    }));
   } else {
     throw new Error('No users in API 🤷‍♂️');
   }
@@ -67,7 +70,7 @@ function searchLastWeek(screen_name, results = [], queryParams) {
     .catch(err => console.error(err));
 }
 
-function searchViaTimelines(screen_name, results = [], queryParams) {
+function searchViaTimelines(user, results = [], queryParams) {
   return twitterize({
     requestMethod: 'GET',
     endpoint: '/statuses/user_timeline.json',
@@ -75,7 +78,7 @@ function searchViaTimelines(screen_name, results = [], queryParams) {
     queryParams: Object.assign(
       {},
       {
-        screen_name,
+        screen_name: user.screen_name,
         count: 200,
         include_rts: true
       },
@@ -90,18 +93,15 @@ function searchViaTimelines(screen_name, results = [], queryParams) {
         if (rateLimitCheck(json)) {
           throw new Error('Rate limit exceeded');
         } else if (filteredTweets.length === 200) {
-          return searchViaTimelines(
-            screen_name,
-            results.concat(filteredTweets),
-            {
-              max_id: filteredTweets[199].id_str
-            }
-          );
+          return searchViaTimelines(user, results.concat(filteredTweets), {
+            max_id: filteredTweets[199].id_str
+          });
         }
       } catch (e) {}
 
       return {
-        username: screen_name,
+        username: user.screen_name,
+        image: user.image,
         tweets: results.concat(filteredTweets).length
       };
     })
@@ -118,12 +118,14 @@ function getFriendsList(username = 'kylehalleman') {
   })
     .then(getFriends)
     .then(friends => {
-      return Promise.all(friends.map(friend => searchViaTimelines(friend)));
+      return Promise.all([searchViaTimelines(friends[0])]);
+      // return Promise.all(friends.map(friend => searchViaTimelines(friend)));
       // return Promise.all(friends.map(friend => searchLastWeek(friend)));
     })
     .then(data => {
       console.timeEnd('request');
       console.log('done, maybe');
+      console.log(data);
       return data.slice(0).sort((a, b) => b.tweets - a.tweets);
     })
     .catch(e => console.log(e));

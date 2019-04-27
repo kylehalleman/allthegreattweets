@@ -17,10 +17,15 @@
   border-spacing: 0 1em;
 }
 
+.users-table__row {
+  display: flex;
+}
+
 .users-table__row--header {
   box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
   color: white;
   background-color: #001F3F;
+  align-items: flex-start;
 }
 
 .users-table__header {
@@ -30,6 +35,7 @@
 
 .users-table__cell {
   padding: 0.25em;
+
 }
 
 .users-table__cell--column {
@@ -37,15 +43,20 @@
 }
 
 .users-table__cell--numeric {
-
+  // display: inline-block;
 }
 
 .users-table__cell--user {
   text-align: left;
+  flex: 1 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 .users-table__cell--numeric {
   text-align: right;
+  flex: 0 0 auto;
+  width: 10em;
 }
 
 .users-table__sort {
@@ -62,6 +73,9 @@
   box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
   background-color: hsla(0, 100%, 100%, 0.8);
   box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
 }
 
 .users-table__cell {}
@@ -79,4 +93,11 @@
 .tweets-total {
   flex: 0 0 auto;
   width: 6em;
+}
+
+.canvas {
+  width: 96px;
+  height: 96px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
