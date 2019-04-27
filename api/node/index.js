@@ -7,6 +7,14 @@ function isWithin30Days(tweet) {
   return isAfter(new Date(tweet.created_at), subMonths(new Date(), 1));
 }
 
+class RateLimitError extends Error {
+  constructor() {
+    super('Rate limit exceeded');
+    this.name = 'RateLimitError';
+    this.code = 88;
+  }
+}
+
 const oauthOptions = {
   api_key: process.env.TWITTER_API_KEY,
   api_secret_key: process.env.TWITTER_API_SECRET_KEY,
@@ -21,7 +29,7 @@ function rateLimitCheck(json) {
 const getFriends = obj => {
   const data = JSON.parse(obj);
   if (rateLimitCheck(data)) {
-    throw new Error('Rate limited!');
+    throw new RateLimitError();
   }
   if (data.users) {
     return data.users.map(({ screen_name, profile_image_url_https }) => ({
@@ -49,7 +57,7 @@ function searchLastWeek(screen_name, results = [], queryParams) {
       const statuses = json.statuses || [];
       try {
         if (rateLimitCheck(json)) {
-          throw new Error('Rate limit exceeded');
+          throw new RateLimitError();
         }
 
         if (statuses.length === 100) {
@@ -84,28 +92,26 @@ function searchViaTimelines(user, results = [], queryParams) {
       },
       queryParams
     )
-  })
-    .then(data => {
-      const json = JSON.parse(data);
-      const tweets = Array.isArray(json) ? json : [];
-      const filteredTweets = tweets.filter(isWithin30Days);
-      try {
-        if (rateLimitCheck(json)) {
-          throw new Error('Rate limit exceeded');
-        } else if (filteredTweets.length === 200) {
-          return searchViaTimelines(user, results.concat(filteredTweets), {
-            max_id: filteredTweets[199].id_str
-          });
-        }
-      } catch (e) {}
+  }).then(data => {
+    const json = JSON.parse(data);
+    const tweets = Array.isArray(json) ? json : [];
+    const filteredTweets = tweets.filter(isWithin30Days);
+    try {
+      if (rateLimitCheck(json)) {
+        throw new RateLimitError();
+      } else if (filteredTweets.length === 200) {
+        return searchViaTimelines(user, results.concat(filteredTweets), {
+          max_id: filteredTweets[199].id_str
+        });
+      }
+    } catch (e) {}
 
-      return {
-        username: user.screen_name,
-        image: user.image,
-        tweets: results.concat(filteredTweets).length
-      };
-    })
-    .catch(err => console.error(err));
+    return {
+      username: user.screen_name,
+      image: user.image,
+      tweets: results.concat(filteredTweets).length
+    };
+  });
 }
 
 function getFriendsList(username = 'kylehalleman') {
@@ -125,15 +131,23 @@ function getFriendsList(username = 'kylehalleman') {
     .then(data => {
       console.timeEnd('request');
       return data.slice(0).sort((a, b) => b.tweets - a.tweets);
-    })
-    .catch(e => console.log(e));
+    });
 }
 
 module.exports = (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'application/json' });
+  // @todo handle for rate limit exceeded
+
   const parsed = url.parse(req.url, true);
 
-  getFriendsList(parsed.query.name).then(data => {
-    res.end(JSON.stringify({ following: data }));
-  });
+  getFriendsList(parsed.query.name)
+    .then(data => {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ following: data }));
+    })
+    .catch(err => {
+      if (err.code === 88) {
+        res.writeHead(429, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringfity(err));
+      }
+    });
 };
