@@ -61,7 +61,7 @@ function User({ url, list }) {
                     className="users-table__cell users-table__cell--numeric"
                   >
                     <span className="small-only" aria-hidden="true">
-                      Tweets per day
+                      Tweets per day:{' '}
                     </span>
                     <span>{Math.round((tweets / days) * 100) / 100}</span>
                   </div>
@@ -70,7 +70,7 @@ function User({ url, list }) {
                     className="users-table__cell users-table__cell--numeric"
                   >
                     <span className="small-only" aria-hidden="true">
-                      Total
+                      Total:{' '}
                     </span>
                     <span>{tweets}</span>
                   </div>
@@ -94,7 +94,7 @@ function User({ url, list }) {
                 className="users-table__cell users-table__cell--numeric"
               >
                 <span className="small-only" aria-hidden="true">
-                  Tweets per day
+                  Tweets per day:{' '}
                 </span>
                 <span>{Math.round((total / 30) * 100) / 100}</span>
               </div>
@@ -103,7 +103,7 @@ function User({ url, list }) {
                 className="users-table__cell users-table__cell--numeric"
               >
                 <span className="small-only" aria-hidden="true">
-                  Total
+                  Total:{' '}
                 </span>
                 <span>{total}</span>
               </div>
