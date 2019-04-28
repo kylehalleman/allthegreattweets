@@ -9,10 +9,10 @@ import Image from '../components/image';
 
 const MONTHS = [1, 3, 6];
 
-function fetchData(url, name) {
+function fetchData(url, name, fromServer) {
   return fetch(url)
     .then(res => res.json())
-    .then(json => ({ name, list: json.following }))
+    .then(json => ({ fromServer, name, list: json.following }))
     .catch(res => {
       if (res.status === 429) {
         // rate limit
@@ -26,20 +26,28 @@ function fetchData(url, name) {
     });
 }
 
-function User({ apiLang, error, name, list, router: { pathname, query } }) {
+function User({
+  fromServer,
+  apiLang,
+  error,
+  name,
+  list,
+  router: { pathname, query }
+}) {
   // @todo useEffect here to do the fetch for client-rendering
   // remove from getInitialProps
   // animate the background
   const [userList, setUserList] = useState(list);
 
   useEffect(() => {
-    if (!userList) {
+    // @todo don't fetch on server render, do fetch on query change
+    if (!fromServer) {
       document.body.classList.add('is-loading');
       fetchData(
-        `${window.location.origin}/api/${apiLang}?name=${query.name}&months=${
+        `${window.location.origin}/api/${apiLang}?name=${name}&months=${
           query.months
         }`,
-        query.name
+        name
       ).then(({ list }) => {
         document.body.classList.remove('is-loading');
         setUserList(list);
@@ -47,7 +55,7 @@ function User({ apiLang, error, name, list, router: { pathname, query } }) {
     }
 
     return () => document.body.classList.remove('is-loading');
-  }, [apiLang, query.months, query.name, userList]);
+  }, [apiLang, fromServer, name, query.months, userList]);
 
   const days = 30;
   const total = userList
@@ -205,10 +213,11 @@ User.getInitialProps = async ({ req, query }) => {
       `https://${req.headers.host}/api/${lang}?name=${query.name}&months=${
         query.months
       }`,
-      query.name
+      query.name,
+      true
     );
   } else {
-    return { apiLang: lang };
+    return { apiLang: lang, name: query.name };
   }
 };
 
