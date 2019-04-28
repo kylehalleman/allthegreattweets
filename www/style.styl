@@ -4,148 +4,150 @@
 }
 
 :root {
-	--main-color: #001f3f;
-	--accent-color: #b71540;
-	--light-color: #fff;
+  --main-color: #001f3f;
+  --accent-color: #b71540;
+  --light-color: #fff;
 }
 
 *, *::before, *::after {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html, body {
-	min-height: 100%;
-	font-family Pixels;
+  min-height: 100%;
+  font-family Pixels;
 }
 
 html
-	background-color: var(--light-color);
-	height 100%
-	color var(--main-color)
+  background-color: var(--light-color);
+  height 100%
+  color var(--main-color)
 
 body {
-	margin: 0;
-	padding: 2em 0;
-	background-image: url(/static/PixelArt.png);
-	background-size: contain;
-	background-color: hsla(0, 100%, 100%, 0.5);
+  margin: 0;
+  padding: 2em 0;
+  background-image: url(/static/PixelArt.png);
+  background-size: contain;
+  background-color: hsla(0, 100%, 100%, 0.5);
 }
 
 body.is-loading {
-	animation: load-bg 10s linear infinite;
+  animation: load-bg 10s linear infinite;
 }
 
 @keyframes load-bg {
-	0% {
-		background-position-x: 0vw;
-	}
-	100% {
-		background-position-x: 100vw;
-	}
+  0% {
+    background-position-x: 0vw;
+  }
+  100% {
+    background-position-x: 100vw;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: Pixels;
+  font-family: Pixels;
 }
 
 a {
-	color: var(--main-color);
-	border-bottom: 2px solid;
-	text-decoration: none;
+  color: var(--main-color);
+  border-bottom: 2px solid;
+  text-decoration: none;
 }
 
 a:hover,
 a:focus {
-	color: var(--accent-color);
+  color: var(--accent-color);
 }
 
 main
-	margin: 0 auto;
-	padding: 0 1.5em;
-	width: 100%;
-	max-width: 50em;
+  margin: 0 auto;
+  padding: 0 1.5em;
+  width: 100%;
+  max-width: 50em;
 
 h1, h2
-	text-align center
-	font-weight normal
-	font-size 3em
-	margin: 0 0 1.5em
+  text-align center
+  font-weight normal
+  font-size 3em
+  margin: 0 0 1.5em
 
 h1 {
-	background-color: var(--main-color);
-	color: var(--light-color);
-	padding: 0.25em;
-	text-transform: uppercase;
-	box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
+  background-color: var(--main-color);
+  color: var(--light-color);
+  padding: 0.25em;
+  text-transform: uppercase;
+  box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
 }
 
 form
-	width 100%
-	text-align: center
+  width 100%
+  text-align: center
 
 label
-	display: block;
-	font-size: 1.25em;
-	margin-bottom: 0.5em;
+  display: block;
+  font-size: 1.25em;
+  margin-bottom: 0.5em;
 
 input, button
-	font-size 1.25em
-	font-family Pixels;
+  font-size 1.25em
+  font-family Pixels;
 
 input
-	width 100%
-	padding: 0.5em
-	border-radius: 0;
-	border: 0;
-	-webkit-appearance: none;
-	appearance: none;
-	padding-left: 3.5em;
-	box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
+  width 100%
+  padding: 0.5em
+  border-radius: 0;
+  border: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  padding-left: 3.5em;
+  box-shadow: 0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em;
 
 input:focus {
-	outline: none;
-	box-shadow:
-		0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em,
-		0.5em 0 var(--accent-color),
-		0 0.5em var(--accent-color),
-		-0.5em 0 var(--accent-color),
-		0 -0.5em var(--accent-color),
-		0.25em 0.25em var(--accent-color),
-		-0.25em 0.25em var(--accent-color),
-		0.25em -0.25em var(--accent-color),
-		-0.25em -0.25em var(--accent-color);
+  outline: none;
+  box-shadow:
+    0.25em 0, 0 0.25em, -0.25em 0, 0 -0.25em,
+    0.5em 0 var(--accent-color),
+    0 0.5em var(--accent-color),
+    -0.5em 0 var(--accent-color),
+    0 -0.5em var(--accent-color),
+    0.25em 0.25em var(--accent-color),
+    -0.25em 0.25em var(--accent-color),
+    0.25em -0.25em var(--accent-color),
+    -0.25em -0.25em var(--accent-color);
 }
 
 
 .submit-button {
-	background-color var(--main-color)
-	color var(--light-color)
-	margin: 1em auto 0;
-	padding: 0.5em 1em;
-	cursor: pointer;
-	border: 0;
-	box-shadow: 0.25em 0 , 0 0.25em, -0.25em 0, 0 -0.25em;
+  background-color var(--main-color)
+  color var(--light-color)
+  margin: 1em auto 0;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  border: 0;
+  box-shadow: 0.25em 0 , 0 0.25em, -0.25em 0, 0 -0.25em;
 }
 
 .submit-button:focus,
 .submit-button:hover {
-	background-color: var(--light-color);
-	color: var(--main-color);
+  background-color: var(--light-color);
+  color: var(--main-color);
 }
 
 .input-wrapper {
-	position: relative;
+  position: relative;
 }
 
 .input-wrapper::before {
-	content: "@"
-	position: absolute;
+  content: "@"
+  position: absolute;
   left: 0;
   top: 0;
   font-size: 1.5em;
   height: 100%;
   border-right: 0.25em solid var(--main-color);
   width: 2.5em;
-	line-height: 2
-	text-indent: 0.25em
+  line-height: 2;
+  text-indent: 0.25em;
+  background-color: var(--main-color);
+  color: var(--light-color);
 }
