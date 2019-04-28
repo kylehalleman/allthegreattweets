@@ -55,7 +55,7 @@ function User({
     }
 
     return () => document.body.classList.remove('is-loading');
-  }, [apiLang, fromServer, name, query.months, userList]);
+  }, [apiLang, fromServer, name, query.months]);
 
   const days = 30;
   const total = userList
