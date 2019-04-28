@@ -10,7 +10,7 @@ import Image from '../components/image';
 const MONTHS = [1, 3, 6];
 
 function fetchData(url, name) {
-  fetch(url)
+  return fetch(url)
     .then(res => res.json())
     .then(json => ({ name, list: json.following }))
     .catch(res => {
