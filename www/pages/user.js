@@ -31,7 +31,7 @@ function User({
   apiLang,
   error,
   name,
-  list,
+  list = [],
   router: { pathname, query }
 }) {
   // @todo useEffect here to do the fetch for client-rendering
@@ -64,6 +64,10 @@ function User({
   const currentRange =
     typeof query.months === 'undefined' ? 1 : parseInt(query.months);
 
+  function handleClick() {
+    setUserList([]);
+  }
+
   return (
     <>
       <Head title={`Who @${name} follows | All the Great Tweets 🦉`} />
@@ -73,7 +77,7 @@ function User({
         </h1>
         {error ? (
           <span>{error}</span>
-        ) : !userList ? (
+        ) : !userList.length ? (
           <div className="loading-box-container">
             <div className="loading-box">Fetching your tweets...</div>
           </div>
@@ -96,6 +100,7 @@ function User({
                     className="range-link"
                     aria-current={currentRange === months ? 'page' : false}
                     aria-describedby="set-range"
+                    onClick={handleClick}
                   >
                     {months} {months === 1 ? 'month' : 'months'}
                   </a>
