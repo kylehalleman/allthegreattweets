@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import fetch from 'isomorphic-unfetch';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
@@ -9,9 +9,48 @@ import Image from '../components/image';
 
 const MONTHS = [1, 3, 6];
 
-function User({ error, name, list, router: { pathname, query } }) {
+function fetchData(url, name) {
+  fetch(url)
+    .then(res => res.json())
+    .then(json => ({ name, list: json.following }))
+    .catch(res => {
+      if (res.status === 429) {
+        // rate limit
+        return {
+          error: 'Rate limit exceeded. Damnit, Twitter!',
+          name
+        };
+      } else {
+        return { error: 'Unknown error', name };
+      }
+    });
+}
+
+function User({ apiLang, error, name, list, router: { pathname, query } }) {
+  // @todo useEffect here to do the fetch for client-rendering
+  // remove from getInitialProps
+  // animate the background
+  const [userList, setUserList] = useState(list);
+
+  useEffect(() => {
+    if (!userList) {
+      document.body.classList.add('is-loading');
+      fetchData(
+        `${window.location.origin}/api/${apiLang}?name=${query.name}&months=${
+          query.months
+        }`,
+        query.name
+      ).then(({ list }) => {
+        document.body.classList.remove('is-loading');
+        setUserList(list);
+      });
+    }
+
+    return () => document.body.classList.remove('is-loading');
+  }, [apiLang, query.months, query.name, userList]);
+
   const days = 30;
-  const total = list.reduce((acc, { tweets }) => acc + tweets, 0);
+  const total = userList.reduce((acc, { tweets }) => acc + tweets, 0);
   const currentRange =
     typeof query.months === 'undefined' ? 1 : parseInt(query.months);
 
@@ -24,6 +63,10 @@ function User({ error, name, list, router: { pathname, query } }) {
         </h1>
         {error ? (
           <span>{error}</span>
+        ) : !userList ? (
+          <div className="loading-box-container">
+            <div className="loading-box">Fetching your tweets...</div>
+          </div>
         ) : (
           <>
             <div className="button-group">
@@ -76,7 +119,7 @@ function User({ error, name, list, router: { pathname, query } }) {
                 </div>
               </div>
               <div role="rowgroup" className="users-table__body">
-                {list.map(({ username, tweets, image }, i) => {
+                {userList.map(({ username, tweets, image }, i) => {
                   return (
                     <div
                       key={username}
@@ -155,27 +198,16 @@ function User({ error, name, list, router: { pathname, query } }) {
 
 User.getInitialProps = async ({ req, query }) => {
   const lang = process.env.API_LANG || 'node';
-  const url = req
-    ? `https://${req.headers.host}/api/${lang}?name=${query.name}&months=${
+  if (req) {
+    return fetchData(
+      `https://${req.headers.host}/api/${lang}?name=${query.name}&months=${
         query.months
-      }`
-    : `${window.location.origin}/api/${lang}?name=${query.name}&months=${
-        query.months
-      }`;
-  return fetch(url)
-    .then(res => res.json())
-    .then(json => ({ name: query.name, list: json.following }))
-    .catch(res => {
-      if (res.status === 429) {
-        // rate limit
-        return {
-          error: 'Rate limit exceeded. Damnit, Twitter!',
-          name: query.name
-        };
-      } else {
-        return { error: 'Unknown error', name: query.name };
-      }
-    });
+      }`,
+      query.name
+    );
+  } else {
+    return { apiLang: lang };
+  }
 };
 
 export default withRouter(User);

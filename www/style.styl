@@ -31,6 +31,19 @@ body {
 	background-color: hsla(0, 100%, 100%, 0.5);
 }
 
+body.is-loading {
+	animation: load-bg 2000ms linear infinite;
+}
+
+@keyframes load-bg {
+	0% {
+		background-position-x: 0vw;
+	}
+	100% {
+		background-position-x: 100vw;
+	}
+}
+
 h1, h2, h3, h4, h5, h6 {
 	font-family: Pixels;
 }
