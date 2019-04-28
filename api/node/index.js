@@ -29,21 +29,6 @@ function rateLimitCheck(json) {
   return json.errors && json.errors.some(({ code }) => code === 88);
 }
 
-const getFriends = obj => {
-  const data = JSON.parse(obj);
-  if (rateLimitCheck(data)) {
-    throw new RateLimitError();
-  }
-  if (data.users) {
-    return data.users.map(({ screen_name, profile_image_url_https }) => ({
-      screen_name,
-      image: profile_image_url_https
-    }));
-  } else {
-    throw new Error('No users in API 🤷‍♂️');
-  }
-};
-
 function searchLastWeek(screen_name, results = [], queryParams) {
   return twitterize({
     requestMethod: 'GET',
@@ -120,15 +105,38 @@ const searchViaTimelinesCurry = months => {
   };
 };
 
-function getFriendsList(months = 1, username = 'kylehalleman') {
-  console.time('request');
+// next_cursor
+function getFriendsList(screen_name, results = [], queryParams) {
   return twitterize({
     requestMethod: 'GET',
     endpoint: '/friends/list.json',
     oauthOptions,
-    queryParams: { screen_name: username, count: 200 }
-  })
-    .then(getFriends)
+    queryParams: Object.assign({}, { screen_name, count: 200 }, queryParams)
+  }).then(res => {
+    const data = JSON.parse(res);
+    if (rateLimitCheck(data)) {
+      throw new RateLimitError();
+    }
+    if (data.next_cursor !== 0) {
+      return getFriendsList(screen_name, results.concat(data.users), {
+        cursor: data.next_cursor
+      });
+    } else {
+      return results
+        .concat(data.users)
+        .filter(user => !user.protected)
+        .map(({ screen_name, profile_image_url_https }) => ({
+          screen_name,
+          image: profile_image_url_https
+        }));
+    }
+  });
+}
+
+function getTheTweets(months = 1, username = 'kylehalleman') {
+  console.time('request');
+  // @todo get multiple pages of friends
+  return getFriendsList(username)
     .then(friends =>
       Promise.all(
         friends.map(friend => searchViaTimelinesCurry(months)(friend))
@@ -147,7 +155,7 @@ module.exports = (req, res) => {
   const months =
     typeof query.months === 'undefined' ? 1 : parseInt(query.months);
 
-  getFriendsList(months, query.name)
+  getTheTweets(months, query.name)
     .then(data => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ following: data }));
