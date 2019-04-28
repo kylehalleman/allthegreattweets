@@ -50,7 +50,9 @@ function User({ apiLang, error, name, list, router: { pathname, query } }) {
   }, [apiLang, query.months, query.name, userList]);
 
   const days = 30;
-  const total = userList.reduce((acc, { tweets }) => acc + tweets, 0);
+  const total = userList
+    ? userList.reduce((acc, { tweets }) => acc + tweets, 0)
+    : 0;
   const currentRange =
     typeof query.months === 'undefined' ? 1 : parseInt(query.months);
 
