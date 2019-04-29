@@ -149,8 +149,6 @@ function getTheTweets(months = 1, username = 'kylehalleman') {
 }
 
 module.exports = (req, res) => {
-  // @todo handle for rate limit exceeded
-
   const query = url.parse(req.url, true).query;
   const months =
     typeof query.months === 'undefined' ? 1 : parseInt(query.months);
