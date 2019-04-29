@@ -6,10 +6,6 @@ const subMonths = require('date-fns/subMonths');
 const isWithinXMonths = (months = 1) => tweet =>
   isAfter(new Date(tweet.created_at), subMonths(new Date(), months));
 
-function isWithin30Days(tweet) {
-  return isAfter(new Date(tweet.created_at), subMonths(new Date(), 1));
-}
-
 class RateLimitError extends Error {
   constructor() {
     super('Rate limit exceeded');
@@ -53,7 +49,9 @@ function searchLastWeek(screen_name, results = [], queryParams) {
             .query;
           return searchLastWeek(screen_name, results.concat(statuses), params);
         }
-      } catch (e) {}
+      } catch (e) {
+        console.log('🚨  Error  🚨', e.message);
+      }
 
       const filteredTweets = results
         .concat(statuses)
@@ -94,7 +92,9 @@ const searchViaTimelinesCurry = months => {
             max_id: filteredTweets[199].id_str
           });
         }
-      } catch (e) {}
+      } catch (e) {
+        console.log('🚨  Error  🚨', e.message);
+      }
 
       return {
         username: user.screen_name,
@@ -162,6 +162,7 @@ module.exports = (req, res) => {
     })
     .catch(err => {
       if (err.code === 88) {
+        console.log('🚨  Error  🚨', err.message);
         res.writeHead(429, { 'Content-Type': 'application/json' });
         res.end(JSON.stringfity(err));
       }
