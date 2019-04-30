@@ -57,12 +57,12 @@ function User({
     return () => document.body.classList.remove('is-loading');
   }, [apiLang, fromServer, name, query.months]);
 
-  const days = 30;
   const total = userList
     ? userList.reduce((acc, { tweets }) => acc + tweets, 0)
     : 0;
   const currentRange =
     typeof query.months === 'undefined' ? 1 : parseInt(query.months);
+  const days = currentRange * 30;
 
   function handleClick() {
     setUserList([]);
@@ -190,7 +190,7 @@ function User({
                     <span className="small-only" aria-hidden="true">
                       Tweets Per Day:{' '}
                     </span>
-                    <span>{Math.round((total / 30) * 100) / 100}</span>
+                    <span>{Math.round((total / days) * 100) / 100}</span>
                   </div>
                   <div
                     role="cell"
