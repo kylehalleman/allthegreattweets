@@ -162,7 +162,7 @@ module.exports = (req, res) => {
       if (err.code === 88) {
         console.log('🚨  Error  🚨', err.message);
         res.writeHead(429, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringfity(err));
+        res.end(JSON.stringify(err));
       }
     });
 };
