@@ -25,6 +25,12 @@ function rateLimitCheck(json) {
   return json.errors && json.errors.some(({ code }) => code === 88);
 }
 
+function errorsToString(errors) {
+  return errors
+    .map(({ code, message }) => `Error ${code}: ${message}`)
+    .join('\n');
+}
+
 function searchLastWeek(screen_name, results = [], queryParams) {
   return twitterize({
     requestMethod: 'GET',
@@ -42,6 +48,8 @@ function searchLastWeek(screen_name, results = [], queryParams) {
       try {
         if (rateLimitCheck(json)) {
           throw new RateLimitError();
+        } else if (json.errors) {
+          throw new Error(errorsToString(json.errors));
         }
 
         if (statuses.length === 100) {
@@ -84,16 +92,14 @@ const searchViaTimelinesCurry = months => {
       const json = JSON.parse(data);
       const tweets = Array.isArray(json) ? json : [];
       const filteredTweets = tweets.filter(filterFn);
-      try {
-        if (rateLimitCheck(json)) {
-          throw new RateLimitError();
-        } else if (filteredTweets.length === 200) {
-          return searchViaTimelines(user, results.concat(filteredTweets), {
-            max_id: filteredTweets[199].id_str
-          });
-        }
-      } catch (e) {
-        console.log('🚨  Error  🚨', e.message);
+      if (rateLimitCheck(json)) {
+        throw new RateLimitError();
+      } else if (json.errors) {
+        throw new Error(errorsToString(json.errors));
+      } else if (filteredTweets.length === 200) {
+        return searchViaTimelines(user, results.concat(filteredTweets), {
+          max_id: filteredTweets[199].id_str
+        });
       }
 
       return {
@@ -116,6 +122,8 @@ function getFriendsList(screen_name, results = [], queryParams) {
     const data = JSON.parse(res);
     if (rateLimitCheck(data)) {
       throw new RateLimitError();
+    } else if (data.errors) {
+      throw new Error(errorsToString(data.errors));
     }
     if (data.next_cursor !== 0) {
       return getFriendsList(screen_name, results.concat(data.users), {
@@ -135,7 +143,7 @@ function getFriendsList(screen_name, results = [], queryParams) {
 
 function getTheTweets(months = 1, username = 'kylehalleman') {
   console.time('request');
-  // @todo get multiple pages of friends
+
   return getFriendsList(username)
     .then(friends =>
       Promise.all(

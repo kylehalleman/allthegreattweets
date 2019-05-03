@@ -3,7 +3,7 @@ import fetch from 'isomorphic-unfetch';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
 import './users.styl';
-import Head from '../components/head.js';
+import Head from '../components/head';
 import Main from '../components/main';
 import Image from '../components/image';
 
@@ -41,7 +41,7 @@ function User({
 
   useEffect(() => {
     // @todo don't fetch on server render, do fetch on query change
-    if (!fromServer) {
+    if (!fromServer && !error) {
       document.body.classList.add('is-loading');
       fetchData(
         `${window.location.origin}/api/${apiLang}?name=${name}&months=${
@@ -55,7 +55,11 @@ function User({
     }
 
     return () => document.body.classList.remove('is-loading');
-  }, [apiLang, fromServer, name, query.months]);
+  }, [apiLang, error, fromServer, name, query.months]);
+
+  if (error) {
+    return <span>{error}</span>;
+  }
 
   const total = userList
     ? userList.reduce((acc, { tweets }) => acc + tweets, 0)
@@ -75,9 +79,7 @@ function User({
         <h1 className="heading">
           Who <span className="username">@{name}</span> follows
         </h1>
-        {error ? (
-          <span>{error}</span>
-        ) : !userList.length ? (
+        {!userList.length ? (
           <div className="loading-box-container">
             <div className="loading-box">Fetching your tweets...</div>
           </div>
